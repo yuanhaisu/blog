@@ -25,9 +25,32 @@ GitHub 内容源 → Cloudflare Pages → `yuanhaisu.com`；中文 canonical；�
   - [0006 GEO 与授权](docs/adr/0006-geo-and-licensing.md)
   - [0007 GitHub 优先与分发策略](docs/adr/0007-github-first-and-distribution.md)
 
+## 本地开发
+
+需要 Node 22.22.3+ 或 24.15+（Nuxt 4.6 的引擎要求；`.nvmrc` 固定为 `22.22.3`）与 npm。
+
+```bash
+npm install       # 安装依赖
+npm run dev       # 本地开发服务器
+npm run build     # 静态生成，产物写入 .output/public
+npm run preview   # 预览静态产物
+npm run test:e2e  # 对 .output/public 运行 Playwright 冒烟测试
+```
+
+`npm run test:e2e` 会先由测试配置里的静态服务器提供 `.output/public`，再用 Playwright 访问。若 Playwright 浏览器无法下载，配置使用本机已安装的 Microsoft Edge（`channel: 'msedge'`）。
+
+## 部署（Cloudflare Pages）
+
+- 构建命令：`npm run generate`
+- 构建输出目录：`.output/public`
+- 环境变量：`NODE_VERSION=22`
+- 框架预设：None（纯静态站点）
+
+`wrangler.toml` 已声明 `pages_build_output_dir = ".output/public"`；也可以在项目根目录执行 `npx wrangler pages deploy .output/public` 手动发布。真实预览域名由 Cloudflare Pages 项目生成，需要账号侧配置，仓库中不保存任何凭据。
+
 ## 当前状态
 
-方案已冻结，尚未开始编码。下一步：GitHub Profile 整理、`kindergarten` 私有化 + 案例仓库、Cloudflare Pages、阿里云企业邮箱、Nuxt 4 初始化、知乎/公众号、第 1 篇提纲。
+站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、首篇中文文章、无 JavaScript 可读的正文与 Playwright 冒烟测试。Cloudflare Pages 的真实预览部署待账号侧完成。
 
 ## 关键约束
 
