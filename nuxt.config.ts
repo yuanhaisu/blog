@@ -23,6 +23,8 @@ export default defineNuxtConfig({
   nitro: {
     prerender: {
       crawlLinks: true,
+      // Discovery artifacts are generated from content on every build.
+      routes: ['/sitemap.xml', '/feed.xml', '/robots.txt', '/llms.txt'],
     },
   },
 })
