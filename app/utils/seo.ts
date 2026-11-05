@@ -33,6 +33,35 @@ export function licenseUrl(license: string): string {
   return license
 }
 
+export const WEBSITE_ID = `${SITE.url}/#website`
+
+/**
+ * Site-wide WebSite node rendered once by the default layout.
+ *
+ * `publisher` is a reference to the Person `@id`, never a second Person node.
+ * The SearchAction target matches the search page's `?q=` URL state.
+ */
+export function buildWebsiteJsonLd() {
+  return {
+    '@context': 'https://schema.org',
+    '@type': 'WebSite',
+    '@id': WEBSITE_ID,
+    url: `${SITE.url}/`,
+    name: SITE.name,
+    description: SITE.description,
+    inLanguage: 'zh-CN',
+    publisher: { '@type': 'Person', '@id': PERSON_ID },
+    potentialAction: {
+      '@type': 'SearchAction',
+      target: {
+        '@type': 'EntryPoint',
+        urlTemplate: `${SITE.url}/search?q={search_term_string}`,
+      },
+      'query-input': 'required name=search_term_string',
+    },
+  }
+}
+
 export interface ArticleSchemaInput {
   title: string
   description: string

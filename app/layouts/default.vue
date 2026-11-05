@@ -26,6 +26,7 @@ const year = new Date().getFullYear()
     </footer>
 
     <SitePersonJsonLd />
+    <SiteWebsiteJsonLd />
     <SiteAnalytics />
   </div>
 </template>

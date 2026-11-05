@@ -95,6 +95,35 @@ test('文章页输出唯一且字段完整的 BlogPosting JSON-LD', async ({ pag
   expect(node.license).toBe('https://creativecommons.org/licenses/by/4.0/')
 })
 
+test('每个公开页面输出唯一且字段完整的 WebSite JSON-LD', async ({ page }) => {
+  for (const { path } of publicPages) {
+    const response = await page.goto(path)
+    expect(response?.status(), `${path} 应返回 200`).toBe(200)
+
+    const websites = nodesOfType(await readJsonLd(page), 'WebSite')
+    expect(websites, `${path} 应只有一个 WebSite`).toHaveLength(1)
+
+    const site = websites[0]!
+    expect(site['@context']).toBe('https://schema.org')
+    expect(site['@id']).toBe('https://yuanhaisu.com/#website')
+    expect(site.url).toBe('https://yuanhaisu.com/')
+    expect(site.name).toBe('一人交付笔记')
+    expect(site.description).toBe(
+      '袁海粟的个人博客，记录一个人借助 AI agent 流水线完成软件交付的真实实验。',
+    )
+    expect(site.inLanguage).toBe('zh-CN')
+    expect(site.publisher).toMatchObject({ '@id': personId })
+
+    const action = site.potentialAction as Record<string, unknown>
+    expect(action['@type']).toBe('SearchAction')
+    expect(action.target).toMatchObject({
+      '@type': 'EntryPoint',
+      urlTemplate: 'https://yuanhaisu.com/search?q={search_term_string}',
+    })
+    expect(action['query-input']).toBe('required name=search_term_string')
+  }
+})
+
 test('文章日期使用 ISO 8601，updated 反映到 dateModified', async ({ page }) => {
   await page.goto('/posts/fixture-code-and-toc')
 
@@ -131,6 +160,10 @@ test('同一页面没有重复 JSON-LD 或冲突 canonical，Person 只出现一
     expect(
       nodesOfType(nodes, 'Person'),
       `${path} 应只有一个 Person 实体`,
+    ).toHaveLength(1)
+    expect(
+      nodesOfType(nodes, 'WebSite'),
+      `${path} 应只有一个 WebSite 实体`,
     ).toHaveLength(1)
 
     if (path.startsWith('/posts/')) {
@@ -172,6 +205,7 @@ test('客户端导航后不残留上一页的 canonical 或 JSON-LD', async ({ p
   expect(nodesOfType(await readJsonLd(page), 'BlogPosting')).toHaveLength(1)
   expect(nodesOfType(await readJsonLd(page), 'BreadcrumbList')).toHaveLength(1)
   expect(nodesOfType(await readJsonLd(page), 'Person')).toHaveLength(1)
+  expect(nodesOfType(await readJsonLd(page), 'WebSite')).toHaveLength(1)
 
   await page
     .getByRole('navigation', { name: '主导航' })
@@ -188,6 +222,7 @@ test('客户端导航后不残留上一页的 canonical 或 JSON-LD', async ({ p
   expect(nodesOfType(nodes, 'BlogPosting')).toHaveLength(0)
   expect(nodesOfType(nodes, 'BreadcrumbList')).toHaveLength(0)
   expect(nodesOfType(nodes, 'Person')).toHaveLength(1)
+  expect(nodesOfType(nodes, 'WebSite')).toHaveLength(1)
 })
 
 test.describe('禁用 JavaScript', () => {
@@ -208,6 +243,7 @@ test.describe('禁用 JavaScript', () => {
     expect(nodesOfType(nodes, 'BlogPosting')).toHaveLength(1)
     expect(nodesOfType(nodes, 'BreadcrumbList')).toHaveLength(1)
     expect(nodesOfType(nodes, 'Person')).toHaveLength(1)
+    expect(nodesOfType(nodes, 'WebSite')).toHaveLength(1)
 
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
