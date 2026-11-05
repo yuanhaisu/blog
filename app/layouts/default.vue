@@ -55,6 +55,7 @@ function isCurrent(path: string) {
     </footer>
 
     <SitePersonJsonLd />
+    <SiteWebsiteJsonLd />
     <SiteAnalytics />
   </div>
 </template>

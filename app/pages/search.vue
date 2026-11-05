@@ -39,16 +39,16 @@ const status = ref<SearchStatus>('idle')
 let pagefindLoader: Promise<PagefindApi> | null = null
 let latestRun = 0
 
-useHead({
+usePageSeo({
   title: `搜索 · ${SITE.name}`,
-  meta: [
-    {
-      name: 'description',
-      content: '在「一人交付笔记」中搜索文章。搜索在浏览器本地完成，不需要服务器。',
-    },
-  ],
-  // Defense in depth: the build only indexes `/posts/**`, and this keeps the
-  // search page out of the index even if the glob ever changes.
+  description: '在「一人交付笔记」中搜索文章。搜索在浏览器本地完成，不需要服务器。',
+  path: route.path,
+  ogTitle: '搜索文章',
+})
+
+// Defense in depth: the build only indexes `/posts/**`, and this keeps the
+// search page out of the index even if the glob ever changes.
+useHead({
   htmlAttrs: { 'data-pagefind-ignore': '' },
 })
 

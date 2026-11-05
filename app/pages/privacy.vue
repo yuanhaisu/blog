@@ -1,13 +1,12 @@
 <script setup lang="ts">
-useHead({
+const route = useRoute()
+
+usePageSeo({
   title: `隐私说明 · ${SITE.name}`,
-  meta: [
-    {
-      name: 'description',
-      content:
-        '一人交付笔记的隐私说明：访问统计、Giscus/GitHub 评论与微信公众号订阅分别处理哪些数据，以及 Cookie 的使用情况。',
-    },
-  ],
+  description:
+    '一人交付笔记的隐私说明：访问统计、Giscus/GitHub 评论与微信公众号订阅分别处理哪些数据，以及 Cookie 的使用情况。',
+  path: route.path,
+  ogTitle: '隐私说明',
 })
 </script>
 
