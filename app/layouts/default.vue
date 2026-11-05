@@ -9,6 +9,7 @@ const year = new Date().getFullYear()
       <div class="site-header-meta">
         <p class="site-byline">袁海粟（Yuan Haisu）的个人博客</p>
         <nav class="site-nav" aria-label="主导航">
+          <NuxtLink to="/search">搜索</NuxtLink>
           <NuxtLink to="/archive">归档</NuxtLink>
           <NuxtLink to="/about">关于</NuxtLink>
         </nav>
