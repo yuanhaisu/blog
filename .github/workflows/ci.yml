@@ -46,8 +46,8 @@ jobs:
       - name: Scan tracked files for secrets
         run: npm run check:secrets
 
-      - name: Build static site and Pagefind index
-        run: npm run build
+      - name: Build static site and Pagefind index (with test fixtures)
+        run: npm run build:test
 
       - name: Validate JSON-LD, sitemap, RSS, robots, llms.txt, Pagefind
         run: npm run validate:artifacts
@@ -69,3 +69,7 @@ jobs:
           path: test-results/
           if-no-files-found: ignore
           retention-days: 7
+
+      - name: Clean staged test fixtures
+        if: always()
+        run: npm run clean:fixtures

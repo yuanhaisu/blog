@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 
 const publicPaths = [
   '/',
-  '/posts/why-i-started-one-person-delivery-notes',
+  '/posts/fixture-manifesto',
   '/privacy',
 ]
 

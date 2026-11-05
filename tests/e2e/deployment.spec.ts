@@ -132,11 +132,11 @@ test('www 主机 301 跳转到 apex 并保留路径与查询串', async ({}, tes
   const response = await requestWithHost(
     baseURL,
     'www.yuanhaisu.com',
-    '/posts/why-i-started-one-person-delivery-notes?from=wechat',
+    '/posts/fixture-manifesto?from=wechat',
   )
 
   expect(response.status).toBe(301)
   expect(response.headers.location).toBe(
-    'https://yuanhaisu.com/posts/why-i-started-one-person-delivery-notes?from=wechat',
+    'https://yuanhaisu.com/posts/fixture-manifesto?from=wechat',
   )
 })

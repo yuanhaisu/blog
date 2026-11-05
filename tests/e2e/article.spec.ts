@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const articlePath = '/posts/why-i-started-one-person-delivery-notes'
+const articlePath = '/posts/fixture-manifesto'
 const articleTitle = '我为什么开始「一人交付笔记」'
 
 const fixturePath = '/posts/fixture-code-and-toc'
@@ -47,7 +47,7 @@ test('文章页展示描述、更新日期、标签、专题与阅读时长', as
   await expect(tags.getByRole('link', { name: 'AI Agent', exact: true })).toBeVisible()
   await expect(
     page.getByRole('navigation', { name: '文章专题' }),
-  ).toContainText('一人交付实验')
+  ).toContainText('测试夹具专题')
   await expect(page.getByText(/阅读约 \d+ 分钟/)).toBeVisible()
 })
 

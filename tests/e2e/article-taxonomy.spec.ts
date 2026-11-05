@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 test('文章页链接到所属的每个标签', async ({ page }) => {
-  await page.goto('/posts/why-i-started-one-person-delivery-notes')
+  await page.goto('/posts/fixture-manifesto')
 
   for (const tag of ['一人交付', '个人品牌', 'AI Agent']) {
     await expect(
@@ -19,7 +19,7 @@ test('文章页链接到所属专题并展示专题标题', async ({ page }) => 
 })
 
 test('没有专题的文章不展示专题链接', async ({ page }) => {
-  await page.goto('/posts/why-i-started-one-person-delivery-notes')
+  await page.goto('/posts/fixture-manifesto')
 
   await expect(page.locator('main a[href^="/series/"]')).toHaveCount(0)
 })

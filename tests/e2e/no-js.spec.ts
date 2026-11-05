@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const articlePath = '/posts/why-i-started-one-person-delivery-notes'
+const articlePath = '/posts/fixture-manifesto'
 const articleTitle = '我为什么开始「一人交付笔记」'
 
 const fixturePath = '/posts/fixture-code-and-toc'

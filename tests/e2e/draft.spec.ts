@@ -21,5 +21,5 @@ test('草稿内容不出现在公开的内容数据库转储中', async ({ reque
 
   expect(dump).not.toContain('draft-example-not-published')
   expect(dump).not.toContain(draftTitle)
-  expect(dump).toContain('why-i-started-one-person-delivery-notes')
+  expect(dump).toContain('fixture-manifesto')
 })

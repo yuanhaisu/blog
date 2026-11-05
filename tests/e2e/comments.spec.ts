@@ -1,6 +1,6 @@
 import { expect, test } from '@playwright/test'
 
-const articlePath = '/posts/why-i-started-one-person-delivery-notes'
+const articlePath = '/posts/fixture-manifesto'
 
 test('文章页包含 Giscus 配置与国内读者讨论入口', async ({
   page,

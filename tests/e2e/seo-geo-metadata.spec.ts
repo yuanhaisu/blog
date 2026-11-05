@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
 
 const personId = 'https://yuanhaisu.com/#person'
-const articlePath = '/posts/why-i-started-one-person-delivery-notes'
+const articlePath = '/posts/fixture-manifesto'
 const articleUrl = `https://yuanhaisu.com${articlePath}`
 
 type JsonLdNode = Record<string, unknown>
@@ -57,6 +57,7 @@ const publicPages = [
   { path: '/search', type: 'website' },
   ...postPaths.map((path) => ({ path, type: 'article' as const })),
   { path: '/series/test-series', type: 'website' },
+  { path: '/series/fixture-series', type: 'website' },
   ...tagNames.map((tag) => ({
     path: `/tags/${encodeURIComponent(tag)}`,
     type: 'website' as const,

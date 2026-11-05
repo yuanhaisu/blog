@@ -5,10 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "nuxt dev",
-    "build": "node scripts/stage-content-fixtures.mjs && nuxt generate && npm run search:index",
+    "dev:fixtures": "node scripts/stage-content-fixtures.mjs && nuxt dev",
+    "build": "nuxt generate && npm run search:index",
+    "build:test": "node scripts/stage-content-fixtures.mjs && npm run build",
     "generate": "npm run build",
-    "search:index": "pagefind --site .output/public --glob \"posts/**/*.html\"",
+    "search:index": "node scripts/build-search-index.mjs",
     "preview": "nuxt preview",
+    "stage:fixtures": "node scripts/stage-content-fixtures.mjs",
+    "clean:fixtures": "node scripts/stage-content-fixtures.mjs --clean",
     "validate:content": "node scripts/stage-content-fixtures.mjs && node scripts/validate-content.mjs",
     "validate:artifacts": "node scripts/validate-artifacts.mjs",
     "check:links": "node scripts/check-internal-links.mjs",
@@ -17,7 +21,7 @@
     "test:e2e": "playwright test",
     "smoke:deployment": "node scripts/deployment-smoke.mjs",
     "check:secrets": "node scripts/check-no-secrets.mjs",
-    "ci": "npm run validate:content && npm run check:secrets && npm run build && npm run validate:artifacts && npm run check:links && npm run test:e2e && npm run smoke:deployment"
+    "ci": "npm run validate:content && npm run check:secrets && npm run build:test && npm run validate:artifacts && npm run check:links && npm run test:e2e && npm run smoke:deployment && npm run clean:fixtures"
   },
   "dependencies": {
     "@nuxt/content": "~3.16.2",

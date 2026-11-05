@@ -2,7 +2,7 @@ import { expect, test } from '@playwright/test'
 import type { Page } from '@playwright/test'
 
 const personId = 'https://yuanhaisu.com/#person'
-const articlePath = '/posts/why-i-started-one-person-delivery-notes'
+const articlePath = '/posts/fixture-manifesto'
 
 type JsonLdNode = Record<string, unknown>
 

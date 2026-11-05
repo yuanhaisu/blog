@@ -33,7 +33,7 @@ test('中文查询命中预期文章并显示包含查询词的上下文摘要',
   await expect(item).toBeVisible()
   await expect(item.getByRole('link')).toHaveAttribute(
     'href',
-    '/posts/why-i-started-one-person-delivery-notes',
+    '/posts/fixture-manifesto',
   )
   await expect(item).toContainText('分布式系统')
   await expect(item.locator('mark').first()).toBeVisible()

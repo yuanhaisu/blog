@@ -10,7 +10,7 @@ import {
 // contention.
 test.describe.configure({ mode: 'serial' })
 
-const articlePath = '/posts/why-i-started-one-person-delivery-notes'
+const articlePath = '/posts/fixture-manifesto'
 
 interface PerformanceMetrics {
   lcp: number

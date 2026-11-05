@@ -2,20 +2,25 @@
 /**
  * Stage test-only content fixtures into the gitignored content tree.
  *
- * The draft-isolation checks (content guardrails, artifact validator, link
- * checker, Playwright) need a real `draft: true` post during the build. The
- * only tracked copy lives under tests/fixtures so the public content tree
- * never contains a draft. This script copies it in before validation/build.
+ * Production content lives in `content/posts/` and `content/series/`.
+ * Test fixtures live under `tests/fixtures/content/` and are copied in only
+ * for guardrails, artifact validation, link checks, and Playwright. The
+ * manifest lets `--clean` remove only the files this script staged; it never
+ * deletes real content.
  *
  * Usage:
  *   node scripts/stage-content-fixtures.mjs          # stage fixtures
  *   node scripts/stage-content-fixtures.mjs --clean  # remove staged fixtures
  */
-import { cp, mkdir, readdir, rm, stat } from 'node:fs/promises'
-import { join, resolve } from 'node:path'
+import { cp, mkdir, readdir, readFile, rm, stat, writeFile } from 'node:fs/promises'
+import { join, relative, resolve } from 'node:path'
 
-const fixtureDir = resolve('tests/fixtures/content/drafts')
-const targetDir = resolve('content/posts/drafts')
+const manifestPath = resolve('.fixtures-staged.json')
+const mappings = [
+  { from: resolve('tests/fixtures/content/drafts'), to: resolve('content/posts/drafts') },
+  { from: resolve('tests/fixtures/content/posts'), to: resolve('content/posts') },
+  { from: resolve('tests/fixtures/content/series'), to: resolve('content/series') },
+]
 
 async function exists(path) {
   try {
@@ -27,25 +32,36 @@ async function exists(path) {
 }
 
 async function clean() {
-  await rm(targetDir, { recursive: true, force: true })
-  process.stdout.write(`已清理临时草稿夹具：${targetDir}\n`)
-}
-
-async function stage() {
-  if (!(await exists(fixtureDir))) {
-    process.stdout.write('没有可用的草稿夹具，跳过。\n')
+  if (!(await exists(manifestPath))) {
+    process.stdout.write('没有 staged fixture manifest，跳过清理。\n')
     return
   }
 
-  await mkdir(targetDir, { recursive: true })
-  const entries = await readdir(fixtureDir, { withFileTypes: true })
-  let copied = 0
-  for (const entry of entries) {
-    if (!entry.isFile() || !entry.name.toLowerCase().endsWith('.md')) continue
-    await cp(join(fixtureDir, entry.name), join(targetDir, entry.name))
-    copied += 1
+  const paths = JSON.parse(await readFile(manifestPath, 'utf8'))
+  for (const path of paths) {
+    await rm(resolve(path), { force: true })
   }
-  process.stdout.write(`已复制 ${copied} 个草稿夹具到 ${targetDir}\n`)
+  await rm(manifestPath, { force: true })
+  await rm(resolve('content/posts/drafts'), { recursive: true, force: true })
+  process.stdout.write(`已清理 ${paths.length} 个 staged fixture。\n`)
+}
+
+async function stage() {
+  const staged = []
+
+  for (const { from, to } of mappings) {
+    if (!(await exists(from))) continue
+    await mkdir(to, { recursive: true })
+    for (const entry of await readdir(from, { withFileTypes: true })) {
+      if (!entry.isFile() || !entry.name.toLowerCase().endsWith('.md')) continue
+      const target = join(to, entry.name)
+      await cp(join(from, entry.name), target)
+      staged.push(relative(process.cwd(), target))
+    }
+  }
+
+  await writeFile(manifestPath, JSON.stringify(staged, null, 2))
+  process.stdout.write(`已 stage ${staged.length} 个测试 fixture。\n`)
 }
 
 if (process.argv.includes('--clean')) {

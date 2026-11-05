@@ -13,7 +13,7 @@ test('首页展示站名、身份主张与文章入口', async ({ page }) => {
   ).toBeVisible()
   await expect(
     page.getByRole('link', { name: /我为什么开始「一人交付笔记」/ }).first(),
-  ).toHaveAttribute('href', '/posts/why-i-started-one-person-delivery-notes')
+  ).toHaveAttribute('href', '/posts/fixture-manifesto')
 })
 
 test('首页展示精选文章与订阅入口', async ({ page }) => {
@@ -23,7 +23,7 @@ test('首页展示精选文章与订阅入口', async ({ page }) => {
   await expect(featured).toBeVisible()
   await expect(
     featured.getByRole('link', { name: /我为什么开始「一人交付笔记」/ }),
-  ).toHaveAttribute('href', '/posts/why-i-started-one-person-delivery-notes')
+  ).toHaveAttribute('href', '/posts/fixture-manifesto')
 
   const subscribe = page.getByRole('region', { name: '订阅' })
   await expect(subscribe).toBeVisible()

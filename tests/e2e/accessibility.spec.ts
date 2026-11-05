@@ -5,7 +5,7 @@ import { expect, test, type Page } from '@playwright/test'
 const require = createRequire(import.meta.url)
 const axeSource = readFileSync(require.resolve('axe-core/axe.min.js'), 'utf8')
 
-const articlePath = '/posts/why-i-started-one-person-delivery-notes'
+const articlePath = '/posts/fixture-manifesto'
 const missingPath = '/this-page-does-not-exist'
 
 interface Violation {

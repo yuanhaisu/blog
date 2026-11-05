@@ -11,7 +11,7 @@ const routes = [
   { path: '/archive', heading: '归档' },
   { path: '/about', heading: /袁海粟/ },
   {
-    path: '/posts/why-i-started-one-person-delivery-notes',
+    path: '/posts/fixture-manifesto',
     heading: /我为什么开始/,
   },
   {

@@ -32,10 +32,10 @@ CI 工作流 `.github/workflows/ci.yml` 在 Pull Request、推送到 `main` / `f
 
 | 检查 | 命令 | 当前结果 | 覆盖内容 |
 | --- | --- | --- | --- |
-| 内容护栏 | `npm run validate:content` | 通过：7 篇已发布，1 篇草稿 | frontmatter schema、草稿隔离、正文内链目标、敏感字符串 |
+| 内容护栏 | `npm run validate:content` | 通过：7 篇测试夹具，1 篇草稿 | frontmatter schema、草稿隔离、正文内链目标、敏感字符串 |
 | 密钥扫描 | `npm run check:secrets` | 通过 | 只扫描 Git 跟踪文件；只输出路径与模式名，不输出匹配值 |
-| 静态构建 | `npm run build` | 通过 | `nuxt generate` + Pagefind 中文索引 |
-| 产物验收 | `npm run validate:artifacts` | 通过：10 组检查，19 条公开路由，7 篇文章 | 必需文件、路由清单、JSON-LD、canonical/OG/Twitter、无 JS 正文、sitemap、RSS、robots、llms.txt、`_headers`、Pagefind、草稿隔离 |
+| 静态构建（测试夹具） | `npm run build:test` | 通过 | 先 stage 测试夹具，再 `nuxt generate` + Pagefind 中文索引 |
+| 产物验收 | `npm run validate:artifacts` | 通过：10 组检查，19 条公开路由，7 篇测试夹具 | 必需文件、路由清单、JSON-LD、canonical/OG/Twitter、无 JS 正文、sitemap、RSS、robots、llms.txt、`_headers`、Pagefind、草稿隔离 |
 | 站内链接 | `npm run check:links` | 通过：5 组检查，19 个 HTML 页面，554 个站内链接 | 所有公开路由 200、站内 href/src 200、未知路由 404、草稿路由 404、`www` 301（本地模拟） |
 | Playwright 全套 | `npm run test:e2e` | 通过（115 个测试） | 路由、404、无 JS、JSON-LD、SEO/GEO、RSS/sitemap/robots/llms、Pagefind 中文搜索、Giscus 主题与统计同意门控、图片懒加载、部署头、`www` 301 |
 | 部署冒烟 | `npm run smoke:deployment` | 通过（本地构建产物） | 200、HSTS、CSP、`www` 301 保留路径与查询 |
@@ -78,29 +78,33 @@ CI 工作流 `.github/workflows/ci.yml` 在 Pull Request、推送到 `main` / `f
 | 4 | 知乎 | 《一个人如何用 AI agent 交付一套多租户 SaaS？》 | 未写、未发布 |
 | 5 | 微信公众号 | 《一人公司的 AI 交付实验：第一期复盘》 | 未写、未发布 |
 
-### 2.3 当前 7 篇已发布文章是测试夹具
+### 2.3 测试夹具已移出生产内容
+
+7 篇测试文章与测试专题已移到 `tests/fixtures/content/`：
 
 ```text
-content/posts/why-i-started-one-person-delivery-notes.md
-content/posts/fixture-code-and-toc.md
-content/posts/fixture-related-notes.md
-content/posts/fixture-series-part-one.md
-content/posts/fixture-series-part-two.md
-content/posts/fixture-tag-newer.md
-content/posts/fixture-tag-older.md
+tests/fixtures/content/posts/fixture-manifesto.md
+tests/fixtures/content/posts/fixture-code-and-toc.md
+tests/fixtures/content/posts/fixture-related-notes.md
+tests/fixtures/content/posts/fixture-series-part-one.md
+tests/fixtures/content/posts/fixture-series-part-two.md
+tests/fixtures/content/posts/fixture-tag-newer.md
+tests/fixtures/content/posts/fixture-tag-older.md
+tests/fixtures/content/series/test-series.md
+tests/fixtures/content/series/fixture-series.md
 ```
 
-它们被 Playwright、内容护栏与站点发现产物当成 fixture 使用。它们**不是**上线内容，也不代表 v1 内容已完成；上线前不要删除，否则测试与门禁会失去可验证的样本。
+它们只由 `npm run build:test` / `npm run validate:content` / CI 通过 `scripts/stage-content-fixtures.mjs` 复制到被忽略的 `content/` 路径；生产构建 `npm run build` 不包含它们。因此当前 `content/posts/` 与 `content/series/` 为空，生产站点有 **0 篇文章**，直到写入 3 篇首发博客。
 
-草稿隔离测试使用 `tests/fixtures/content/drafts/draft-example-not-published.md`，构建与内容护栏前会被复制到被忽略的 `content/posts/drafts/`。仓库不再跟踪任何真实草稿文件。
+草稿隔离测试使用 `tests/fixtures/content/drafts/draft-example-not-published.md`，同样只在测试时 staged；仓库不跟踪任何真实草稿文件。
 
 ### 2.4 内容完成后的动作
 
 1. 把 3 篇博客写入 `content/posts/`，frontmatter 通过 `shared/content-schema.mjs`；上线文章加 `launch: true`，确保至少 3 个站内链接与 1 张站内原创配图（配图建议 WebP/AVIF，规则见 `README.md`「图片」）。
 2. 如需专题页，在 `content/series/` 增加 ASCII slug 的专题文档（中文标题放 `title`）；中文文件名在 Nuxt Content 中可能无法正确生成路由。
 3. 平台文章发布后，拿到真实知乎/公众号 URL，再更新第 3 节的 `sameAs` 与 About 入口。
-4. 重新执行 `npm run ci`；构建会自动把新文章纳入 sitemap、RSS、llms.txt 与 Pagefind。
-5. 删除或保留夹具由内容负责人决定；删除后必须重新运行全套测试。
+4. 重新执行 `npm run ci`；测试构建会把夹具与正式文章一起纳入 sitemap、RSS、llms.txt 与 Pagefind；生产构建 `npm run build` 只包含正式文章。
+5. 测试夹具已在 `tests/fixtures/content/`，生产构建不包含，不需要删除。首发第 1 篇可以使用现在空出的 `why-i-started-one-person-delivery-notes` 作为 slug，或使用新的 slug；正文必须满足 `launch: true` 护栏（≥3 个站内链接 + 1 张站内原创配图）。
 
 ## 3. 外部账号步骤：阻塞（blocked for user）
 

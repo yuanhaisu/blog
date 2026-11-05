@@ -6,7 +6,7 @@ updated: 2026-11-08
 tags:
   - 一人交付
   - AI Agent
-series: one-person-delivery-experiment
+series: fixture-series
 order: 1
 draft: false
 featured: false
@@ -63,4 +63,4 @@ npx playwright test
 
 ## 小结
 
-这篇夹具同时链接回[第一篇正式文章](/posts/why-i-started-one-person-delivery-notes)，用于验证相关文章与内链检查。
+这篇夹具同时链接回[第一篇正式文章](/posts/fixture-manifesto)，用于验证相关文章与内链检查。

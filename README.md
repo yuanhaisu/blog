@@ -31,15 +31,20 @@ GitHub 内容源 → Cloudflare Pages → `yuanhaisu.com`；中文 canonical；�
 需要 Node 22.22.3+ 或 24.15+（Nuxt 4.6 的引擎要求；`.nvmrc` 固定为 `22.22.3`）与 npm。
 
 ```bash
-npm install       # 安装依赖
-npm run dev       # 本地开发服务器
-npm run build     # 静态生成，产物写入 .output/public
-npm run preview   # 预览静态产物
-npm run test:e2e  # 对 .output/public 运行 Playwright 冒烟测试
-npm run ci        # 内容护栏、密钥扫描、构建、产物、内链、Playwright、部署冒烟
+npm install            # 安装依赖
+npm run dev            # 生产内容（当前 0 篇，直到写入首发文章）
+npm run dev:fixtures   # 带测试夹具的本地开发
+npm run build          # 生产构建，不包含测试夹具
+npm run build:test     # 测试构建：先 stage tests/fixtures/content/，再构建
+npm run clean:fixtures # 清理 staged 夹具
+npm run preview        # 预览静态产物
+npm run test:e2e       # 需先 npm run build:test
+npm run ci             # 内容护栏、密钥扫描、测试构建、产物、内链、Playwright、部署冒烟
 ```
 
-`npm run test:e2e` 会先由测试配置里的静态服务器提供 `.output/public`，再用 Playwright 访问。本地 Windows 环境使用已安装的 Microsoft Edge（`channel: 'msedge'`）；CI 设置 `CI=true` 后使用已安装的 Chromium。
+生产内容在 `content/posts/` 与 `content/series/`；测试夹具在 `tests/fixtures/content/`。`npm run build` 只构建生产内容，`npm run build:test` 会先把夹具 stage 进被忽略的 `content/` 路径，供护栏、产物校验、内链检查与 Playwright 使用；`npm run ci` 结束时自动清理。
+
+`npm run test:e2e` 会先由测试配置里的静态服务器提供 `.output/public`，再用 Playwright 访问；先运行 `npm run build:test` 生成带夹具的产物。本地 Windows 环境使用已安装的 Microsoft Edge（`channel: 'msedge'`）；CI 设置 `CI=true` 后使用已安装的 Chromium。
 
 ## 统计配置
 
@@ -86,7 +91,7 @@ NUXT_PUBLIC_WECHAT_MP_URL=https://mp.weixin.qq.com/s/<article-or-profile>
 ## 内容、草稿与上线护栏
 
 - 真实草稿放在 `content/posts/drafts/`，该目录被 `.gitignore` 忽略，不会被提交。草稿仍会被内容护栏读取并验证 frontmatter，但不会进入路由、sitemap、RSS、llms.txt 或 Pagefind。
-- 用于测试草稿隔离的夹具存放在 `tests/fixtures/content/drafts/`，由 `scripts/stage-content-fixtures.mjs` 在 `npm run build` / `npm run validate:content` 前复制到 `content/posts/drafts/`；`--clean` 可清理复制结果。这样仓库不再跟踪真实草稿，测试仍然是非空验证。
+- **所有测试夹具**（文章、专题、草稿）存放在 `tests/fixtures/content/`，由 `scripts/stage-content-fixtures.mjs` 在 `npm run build:test` / `npm run validate:content` / CI 前复制到被忽略的 `content/posts/`、`content/posts/drafts/`、`content/series/`；`npm run clean:fixtures` 会按 manifest 只删除 staged 文件，不会碰真实内容。生产构建 `npm run build` 不 stage 夹具，因此 `content/` 里当前为空，直到写入首发文章。
 - 首发文章在 frontmatter 写 `launch: true`。内容护栏会要求至少 3 个不同的站内链接和至少 1 张站内原创配图，并允许链接到由已发布文章生成动态 `/tags/...`、`/series/...` 路由。测试夹具与未到发布阶段的文章不写该字段，因此不受约束。
 
 ## 图片
@@ -123,7 +128,7 @@ npm run check:secrets      # 检查仓库不含凭据与 .env
 
 ## 当前状态
 
-站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、文章/标签/专题/归档页、无 JavaScript 可读的正文与 Playwright 测试。仓库侧上线门禁（内容护栏、构建、JSON-LD/sitemap/RSS/robots/llms.txt、内链、Pagefind、HSTS/CSP、`www` 跳转声明、冒烟与密钥扫描）已通过；3 篇首发文章与 2 篇平台稿尚未写，Cloudflare Pages 项目、DNS、真实统计/Giscus ID 与 `www` 跳转仍待账号侧完成，详见[上线验收清单](docs/launch-checklist.md)。
+站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、文章/标签/专题/归档页、无 JavaScript 可读的正文与 Playwright 测试。仓库侧上线门禁（内容护栏、测试构建、JSON-LD/sitemap/RSS/robots/llms.txt、内链、Pagefind、HSTS/CSP、`www` 跳转声明、冒烟与密钥扫描）已通过；生产内容当前为 **0 篇**，7 篇测试夹具只在测试/CI 时 staged；3 篇首发文章与 2 篇平台稿尚未写，Cloudflare Pages 项目、DNS、真实统计/Giscus ID 与 `www` 跳转仍待账号侧完成，详见[上线验收清单](docs/launch-checklist.md)。
 
 ## 关键约束
 

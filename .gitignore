@@ -18,3 +18,7 @@ test-results/
 Thumbs.db
 *.log
 content/posts/drafts/
+content/posts/fixture-*.md
+content/series/test-series.md
+content/series/fixture-*.md
+.fixtures-staged.json
