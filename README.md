@@ -39,6 +39,19 @@ npm run test:e2e  # 对 .output/public 运行 Playwright 冒烟测试
 
 `npm run test:e2e` 会先由测试配置里的静态服务器提供 `.output/public`，再用 Playwright 访问。若 Playwright 浏览器无法下载，配置使用本机已安装的 Microsoft Edge（`channel: 'msedge'`）。
 
+## 统计配置
+
+所有公开页面的正文之后都会加载 Cloudflare Web Analytics 与百度统计，脚本使用 `defer` / 动态 `async`，不阻塞正文渲染。站点 ID 不是密钥，但不要把真实账号信息写进仓库：
+
+```bash
+# 未设置时使用 app/utils/analytics.ts 中的占位值（000...000）
+NUXT_PUBLIC_CLOUDFLARE_ANALYTICS_TOKEN=<cloudflare-beacon-token>
+NUXT_PUBLIC_BAIDU_ANALYTICS_ID=<baidu-hm-site-id>
+npm run build
+```
+
+在 Cloudflare Pages 项目的环境变量中设置同名的 `NUXT_PUBLIC_*` 变量即可。`.env.example` 列出了这两个变量。
+
 ## 部署（Cloudflare Pages）
 
 - 构建命令：`npm run generate`
