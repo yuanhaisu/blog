@@ -1,0 +1,3 @@
+name = "yuanhaisu-blog"
+pages_build_output_dir = ".output/public"
+compatibility_date = "2026-11-05"
