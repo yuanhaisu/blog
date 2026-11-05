@@ -1,22 +1,50 @@
 <script setup lang="ts">
+const route = useRoute()
 const year = new Date().getFullYear()
+
+function isCurrent(path: string) {
+  return route.path === path
+}
 </script>
 
 <template>
   <div class="page-shell">
     <header class="site-header">
+      <a class="skip-link" href="#main-content">跳到主要内容</a>
       <NuxtLink to="/" class="site-brand">一人交付笔记</NuxtLink>
       <div class="site-header-meta">
         <p class="site-byline">袁海粟（Yuan Haisu）的个人博客</p>
         <nav class="site-nav" aria-label="主导航">
-          <NuxtLink to="/search">搜索</NuxtLink>
-          <NuxtLink to="/archive">归档</NuxtLink>
-          <NuxtLink to="/about">关于</NuxtLink>
+          <NuxtLink
+            to="/"
+            :aria-current="isCurrent('/') ? 'page' : undefined"
+          >
+            首页
+          </NuxtLink>
+          <NuxtLink
+            to="/search"
+            :aria-current="isCurrent('/search') ? 'page' : undefined"
+          >
+            搜索
+          </NuxtLink>
+          <NuxtLink
+            to="/archive"
+            :aria-current="isCurrent('/archive') ? 'page' : undefined"
+          >
+            归档
+          </NuxtLink>
+          <NuxtLink
+            to="/about"
+            :aria-current="isCurrent('/about') ? 'page' : undefined"
+          >
+            关于
+          </NuxtLink>
         </nav>
+        <ThemeToggle />
       </div>
     </header>
 
-    <main class="site-main">
+    <main id="main-content" class="site-main" tabindex="-1">
       <slot />
     </main>
 

@@ -10,6 +10,7 @@
     "search:index": "pagefind --site .output/public --glob \"posts/**/*.html\"",
     "preview": "nuxt preview",
     "validate:content": "node scripts/validate-content.mjs",
+    "fonts:subset": "node scripts/subset-fonts.mjs",
     "test": "playwright test",
     "test:e2e": "playwright test",
     "smoke:deployment": "node scripts/deployment-smoke.mjs",
@@ -23,6 +24,7 @@
   },
   "devDependencies": {
     "@playwright/test": "~1.64.1",
+    "axe-core": "^4.14.0",
     "pagefind": "^1.6.0"
   },
   "engines": {

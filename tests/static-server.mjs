@@ -209,6 +209,21 @@ export function createStaticServer(
         const indexPath = join(filePath, 'index.html')
         const indexInfo = await fileStats(indexPath)
         if (!indexInfo || indexInfo.isDirectory()) {
+          // Cloudflare Pages serves 404.html (generated from app/error.vue) for
+          // unknown paths; mirror that behavior locally.
+          const notFoundPath = join(resolvedRoot, '404.html')
+          const notFoundInfo = await fileStats(notFoundPath)
+          if (notFoundInfo && !notFoundInfo.isDirectory()) {
+            const notFoundBody = await readFile(notFoundPath)
+            res.writeHead(404, {
+              ...headersForPath(headerRules, pathname),
+              'content-type': contentTypes['.html'],
+              'content-length': notFoundInfo.size,
+            })
+            res.end(notFoundBody)
+            return
+          }
+
           res.writeHead(404, { 'content-type': 'text/plain; charset=utf-8' })
           res.end('Not found')
           return

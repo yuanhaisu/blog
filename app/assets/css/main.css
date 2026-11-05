@@ -1,3 +1,8 @@
+/*
+ * Light palette. Every foreground/background pair used for text meets WCAG AA
+ * (4.5:1) in both themes; the muted and accent colours are checked by the
+ * axe-core accessibility suite.
+ */
 :root {
   --paper: #f6f2e9;
   --surface: #fffdf8;
@@ -5,9 +10,37 @@
   --muted: #625c52;
   --accent: #a63d2f;
   --rule: #d9d1c1;
+  --code-bg: #ffffff;
   --max-width: 46rem;
-  --font-sans: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  --font-sans: 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   --font-serif: 'Noto Serif SC', 'Songti SC', 'SimSun', serif;
+  color-scheme: light;
+}
+
+/* No stored preference: follow the operating system. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --paper: #141210;
+    --surface: #1d1a16;
+    --ink: #f0ece4;
+    --muted: #b8b0a2;
+    --accent: #e79a86;
+    --rule: #3b352d;
+    --code-bg: #0d1117;
+    color-scheme: dark;
+  }
+}
+
+/* Explicit choice always wins over the system preference. */
+:root[data-theme='dark'] {
+  --paper: #141210;
+  --surface: #1d1a16;
+  --ink: #f0ece4;
+  --muted: #b8b0a2;
+  --accent: #e79a86;
+  --rule: #3b352d;
+  --code-bg: #0d1117;
+  color-scheme: dark;
 }
 
 *,
@@ -26,6 +59,12 @@ html {
 
 body {
   margin: 0;
+  background: var(--paper);
+}
+
+img {
+  max-width: 100%;
+  height: auto;
 }
 
 a {
@@ -44,6 +83,31 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+.skip-link {
+  position: fixed;
+  top: 0.75rem;
+  left: 0.75rem;
+  z-index: 100;
+  padding: 0.5rem 0.9rem;
+  border: 2px solid var(--accent);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transform: translateY(-250%);
+  transition: transform 0.15s ease;
+}
+
+.skip-link:focus-visible {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skip-link {
+    transition: none;
+  }
+}
+
 .page-shell {
   display: flex;
   flex-direction: column;
@@ -55,7 +119,7 @@ button:focus-visible {
 .site-header {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   justify-content: space-between;
   gap: 0.5rem 1.5rem;
   padding: 2rem 0 1.25rem;
@@ -83,18 +147,52 @@ button:focus-visible {
 .site-header-meta {
   display: flex;
   flex-wrap: wrap;
-  align-items: baseline;
+  align-items: center;
   gap: 0.5rem 1.25rem;
+  min-width: 0;
 }
 
 .site-nav {
   display: flex;
-  gap: 1rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 1rem;
 }
 
 .site-nav a {
+  padding: 0.2rem 0;
   font-size: 0.85rem;
   text-decoration: none;
+}
+
+.site-nav a[aria-current='page'] {
+  color: var(--accent);
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  padding: 0;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--ink);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.theme-toggle svg {
+  width: 1.05rem;
+  height: 1.05rem;
 }
 
 .about-header {
@@ -399,6 +497,16 @@ button:focus-visible {
   margin: 0 0 1.25rem;
 }
 
+/* Long URLs, code identifiers and unbroken strings must wrap instead of
+   widening the page on narrow screens. */
+.post-body :where(p, li, a) {
+  overflow-wrap: anywhere;
+}
+
+.post-body :not(pre) > code {
+  overflow-wrap: anywhere;
+}
+
 .post-body :where(ul, ol) {
   padding-left: 1.4rem;
 }
@@ -414,15 +522,46 @@ button:focus-visible {
 .post-body pre {
   position: relative;
   overflow-x: auto;
+  max-width: 100%;
   margin: 0 0 1.5rem;
   padding: 1rem 1.15rem;
   border: 1px solid var(--rule);
+  background: var(--code-bg);
   font-size: 0.86rem;
   line-height: 1.65;
 }
 
 .post-body pre code {
   font-family: 'JetBrains Mono', 'Cascadia Code', 'Consolas', monospace;
+}
+
+/*
+ * Nuxt Content emits both light and dark Shiki themes and switches on a
+ * `.dark` class. This site expresses the theme with `data-theme`, so mirror
+ * the dark variable mapping (including the no-JS system preference).
+ */
+:root[data-theme='dark'] .shiki span {
+  color: var(--shiki-dark);
+  background: var(--shiki-dark-bg);
+  font-style: var(--shiki-dark-font-style);
+  font-weight: var(--shiki-dark-font-weight);
+  text-decoration: var(--shiki-dark-text-decoration);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .shiki span {
+    color: var(--shiki-dark);
+    background: var(--shiki-dark-bg);
+    font-style: var(--shiki-dark-font-style);
+    font-weight: var(--shiki-dark-font-weight);
+    text-decoration: var(--shiki-dark-text-decoration);
+  }
+}
+
+.post-body :where(table) {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
 }
 
 .code-copy-button {
@@ -438,13 +577,11 @@ button:focus-visible {
   font-size: 0.75rem;
   line-height: 1.4;
   cursor: pointer;
-  opacity: 0.85;
 }
 
 .code-copy-button:hover,
 .code-copy-button:focus-visible {
   color: var(--accent);
-  opacity: 1;
 }
 
 .post-pagination {
@@ -488,6 +625,49 @@ button:focus-visible {
   margin: 0;
   padding: 0;
   list-style: none;
+}
+
+.error-page .site-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.error-page h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(2.4rem, 7vw, 4rem);
+  line-height: 1.15;
+  letter-spacing: 0.03em;
+}
+
+.error-lede {
+  max-width: 34rem;
+  margin: 1rem 0 0;
+  color: var(--muted);
+}
+
+.error-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.85rem;
+  margin-top: 2rem;
+}
+
+.error-action {
+  display: inline-block;
+  padding: 0.6rem 1.1rem;
+  border: 1px solid var(--accent);
+  background: var(--surface);
+  color: var(--ink);
+  font-size: 0.95rem;
+  text-decoration: none;
+}
+
+.error-action:hover {
+  background: var(--accent);
+  color: var(--paper);
 }
 
 .visually-hidden {
@@ -603,6 +783,10 @@ button:focus-visible {
 @media (max-width: 40rem) {
   .site-main {
     padding-top: 2.25rem;
+  }
+
+  .site-header {
+    padding-top: 1.5rem;
   }
 }
 
