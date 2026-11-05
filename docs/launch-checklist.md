@@ -36,8 +36,8 @@ CI 工作流 `.github/workflows/ci.yml` 在 Pull Request、推送到 `main` / `f
 | 密钥扫描 | `npm run check:secrets` | 通过 | 只扫描 Git 跟踪文件；只输出路径与模式名，不输出匹配值 |
 | 静态构建 | `npm run build` | 通过 | `nuxt generate` + Pagefind 中文索引 |
 | 产物验收 | `npm run validate:artifacts` | 通过：10 组检查，19 条公开路由，7 篇文章 | 必需文件、路由清单、JSON-LD、canonical/OG/Twitter、无 JS 正文、sitemap、RSS、robots、llms.txt、`_headers`、Pagefind、草稿隔离 |
-| 站内链接 | `npm run check:links` | 通过：5 组检查，19 个 HTML 页面，约 514 个站内链接 | 所有公开路由 200、站内 href/src 200、未知路由 404、草稿路由 404、`www` 301（本地模拟） |
-| Playwright 全套 | `npm run test:e2e` | 通过（101 个测试） | 路由、404、无 JS、JSON-LD、SEO/GEO、RSS/sitemap/robots/llms、Pagefind 中文搜索、Giscus/统计配置、部署头、`www` 301 |
+| 站内链接 | `npm run check:links` | 通过：5 组检查，19 个 HTML 页面，554 个站内链接 | 所有公开路由 200、站内 href/src 200、未知路由 404、草稿路由 404、`www` 301（本地模拟） |
+| Playwright 全套 | `npm run test:e2e` | 通过（115 个测试） | 路由、404、无 JS、JSON-LD、SEO/GEO、RSS/sitemap/robots/llms、Pagefind 中文搜索、Giscus 主题与统计同意门控、图片懒加载、部署头、`www` 301 |
 | 部署冒烟 | `npm run smoke:deployment` | 通过（本地构建产物） | 200、HSTS、CSP、`www` 301 保留路径与查询 |
 
 ### 1.3 已逐项确认的上线不变量
@@ -51,7 +51,13 @@ CI 工作流 `.github/workflows/ci.yml` 在 Pull Request、推送到 `main` / `f
 - `_headers` 含 HSTS、CSP（Giscus、Cloudflare Analytics、百度统计、Pagefind worker、字体来源）与安全头。
 - Pagefind 生成 `zh-cn` 索引，已发布文章全部可检索；中文查询有 Playwright 断言。
 - Giscus 的 repo / repoId / category / categoryId 配置与 Cloudflare、百度统计脚本均出现在文章或全站 HTML 中；当前值是占位符，真实值见第 3 节。
-- 草稿不出现在路由、sitemap、RSS、llms.txt、Pagefind 索引或内容数据库转储中。
+- 草稿不出现在路由、sitemap、RSS、llms.txt、Pagefind 索引或内容数据库转储中；仓库不跟踪真实草稿，`content/posts/drafts/` 被忽略，测试夹具由 `scripts/stage-content-fixtures.mjs` 在构建前复制。
+- 页脚与 404 页均展示 CC BY 4.0 授权链接；文章页脚同样展示。
+- 所有 Markdown 文章图片带 `loading="lazy"` 与 `decoding="async"`；首发文章通过 `launch: true` 接受至少 3 个站内链接与 1 张站内原创配图检查，动态 `/tags/...`、`/series/...` 路由可被内链解析。
+- Cloudflare Web Analytics 无 Cookie、立即加载；百度统计默认不加载，仅在读者明确同意后插入脚本，拒绝后保持无 Cookie 统计。隐私说明页与 Playwright 覆盖允许/拒绝/刷新保持。
+- Giscus 主题跟随 `<html data-theme>`（主题按钮与 `localStorage`），监听主题变化并更新 iframe；仅在没有站点主题时回退到 `prefers-color-scheme`。
+- 首页有一等精选文章区（`featured: true`，无文章时整段隐藏）与订阅入口（RSS + 公众号占位）。
+- `scripts/validate-artifacts.mjs` 已拆分为 `scripts/lib/artifacts/` 下的按产物模块；CSP 不再包含 Google Fonts 来源，字体全部自托管。
 
 ## 2. 上线内容：待完成（内容工作，当前未写）
 
@@ -86,9 +92,11 @@ content/posts/fixture-tag-older.md
 
 它们被 Playwright、内容护栏与站点发现产物当成 fixture 使用。它们**不是**上线内容，也不代表 v1 内容已完成；上线前不要删除，否则测试与门禁会失去可验证的样本。
 
+草稿隔离测试使用 `tests/fixtures/content/drafts/draft-example-not-published.md`，构建与内容护栏前会被复制到被忽略的 `content/posts/drafts/`。仓库不再跟踪任何真实草稿文件。
+
 ### 2.4 内容完成后的动作
 
-1. 把 3 篇博客写入 `content/posts/`，frontmatter 通过 `shared/content-schema.mjs`。
+1. 把 3 篇博客写入 `content/posts/`，frontmatter 通过 `shared/content-schema.mjs`；上线文章加 `launch: true`，确保至少 3 个站内链接与 1 张站内原创配图（配图建议 WebP/AVIF，规则见 `README.md`「图片」）。
 2. 如需专题页，在 `content/series/` 增加 ASCII slug 的专题文档（中文标题放 `title`）；中文文件名在 Nuxt Content 中可能无法正确生成路由。
 3. 平台文章发布后，拿到真实知乎/公众号 URL，再更新第 3 节的 `sameAs` 与 About 入口。
 4. 重新执行 `npm run ci`；构建会自动把新文章纳入 sitemap、RSS、llms.txt 与 Pagefind。
@@ -111,7 +119,7 @@ content/posts/fixture-tag-older.md
 
 ### 3.2 真实统计 ID
 
-当前 `app/utils/analytics.ts` 使用可安全提交的占位值，构建仍输出统计脚本，但数据不会进入真实项目。
+当前 `app/utils/analytics.ts` 使用可安全提交的占位值，构建仍输出 Cloudflare 统计脚本；百度统计只有在读者同意后才会加载，数据不会进入真实项目。
 
 | 服务 | 环境变量 | 阻塞项 |
 | --- | --- | --- |
@@ -144,16 +152,17 @@ NUXT_PUBLIC_GISCUS_CATEGORY_ID
 
 | 项目 | 仓库侧现状 | 阻塞项 |
 | --- | --- | --- |
-| 知乎主页 | `PERSON.sameAs` 故意不含知乎；About 使用明确的占位文案 | 账号未建立/URL 未确认，不能编造 |
-| 微信公众号入口 | About 使用占位文案 | 公众号未建立，二维码/链接未提供 |
-| 平台文章 URL | 第 2 节两篇平台稿未写 | 发布后回填真实 URL，再更新 `sameAs` 与 About |
+| 知乎主页 | `shared/site-config.mjs` 的 `resolveProfiles()` 默认返回空 `href`，About 显示占位文案；`sameAs` 不包含知乎 | 账号未建立/URL 未确认，不能编造；建立后通过 `NUXT_PUBLIC_ZHIHU_URL` 提供 |
+| 微信公众号入口 | 同上，默认占位；`sameAs` 不包含公众号 | 公众号未建立；建立后通过 `NUXT_PUBLIC_WECHAT_MP_URL` 提供 |
+| 平台文章 URL | 第 2 节两篇平台稿未写 | 发布后把真实 URL 写入环境变量，重新构建并确认 About 与 JSON-LD `sameAs` 同步 |
 
 ### 3.5 上线后外部复验
 
 - 生产冒烟：`SMOKE_BASE_URL=https://yuanhaisu.com npm run smoke:deployment`（检查 HTTPS、200、HSTS/CSP、`www` 301、http→https）。
 - Google Search Console、Bing Webmaster、百度站长：提交 `https://yuanhaisu.com/sitemap.xml`，验证站点所有权。
 - 如启用域名邮箱：在 Cloudflare DNS 添加 MX/SPF/DKIM 记录。
-- 用真实浏览器复验 Giscus 加载、两条统计上报、Pagefind 中文搜索与移动端布局。
+- 用真实浏览器复验 Giscus 加载与主题跟随、Cloudflare 无 Cookie 统计、百度统计在点击同意后才发起请求、Pagefind 中文搜索与移动端布局。
+- 百度统计的同意条在无 Cookie 状态下不应自动创建 `hm.baidu.com` 请求；拒绝后刷新页面不再出现同意条。
 
 ## 4. 上线判定
 

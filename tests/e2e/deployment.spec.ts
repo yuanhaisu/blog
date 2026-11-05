@@ -50,10 +50,14 @@ test('CSP 允许 Giscus、统计、字体与站内搜索所需来源', async ({ 
     ]),
   )
   expect(directives.get('font-src')).toEqual(
-    expect.arrayContaining(["'self'", 'data:', 'https://fonts.gstatic.com']),
+    expect.arrayContaining(["'self'", 'data:']),
   )
+  expect(directives.get('font-src')).not.toContain('https://fonts.gstatic.com')
   expect(directives.get('style-src')).toEqual(
-    expect.arrayContaining(["'self'", 'https://fonts.googleapis.com']),
+    expect.arrayContaining(["'self'"]),
+  )
+  expect(directives.get('style-src')).not.toContain(
+    'https://fonts.googleapis.com',
   )
   expect(directives.get('worker-src')).toEqual(
     expect.arrayContaining(["'self'", 'blob:']),

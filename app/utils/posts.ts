@@ -21,6 +21,20 @@ export async function fetchPublishedPostsByDate() {
 }
 
 /**
+ * Published posts carrying `featured: true`, newest first.
+ */
+export async function fetchFeaturedPosts() {
+  const posts = await queryPublishedPosts()
+    .where('featured', '=', true)
+    .order('date', 'DESC')
+    .all()
+
+  return [...posts].sort(
+    (left, right) => right.date.localeCompare(left.date) || left.path.localeCompare(right.path),
+  )
+}
+
+/**
  * Published posts carrying `tag`, newest first.
  */
 export async function fetchPublishedPostsByTag(tag: string) {

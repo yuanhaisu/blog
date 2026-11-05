@@ -43,13 +43,7 @@ usePageSeo({
     </header>
 
     <ul class="post-list">
-      <li v-for="post in posts" :key="post.path" class="post-item">
-        <NuxtLink :to="post.path" class="post-link">
-          <span class="post-title">{{ post.title }}</span>
-          <time :datetime="post.date">{{ post.date }}</time>
-          <span class="post-description">{{ post.description }}</span>
-        </NuxtLink>
-      </li>
+      <PostListItem v-for="post in posts" :key="post.path" :post="post" />
     </ul>
   </div>
 </template>

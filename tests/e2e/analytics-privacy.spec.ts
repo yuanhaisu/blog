@@ -6,7 +6,7 @@ const publicPaths = [
   '/privacy',
 ]
 
-test('所有公开页面加载统计配置，且统计脚本不阻塞正文渲染', async ({
+test('公开页面默认只加载无 Cookie 统计，百度统计等待明确同意', async ({
   request,
 }) => {
   for (const path of publicPaths) {
@@ -27,24 +27,81 @@ test('所有公开页面加载统计配置，且统计脚本不阻塞正文渲�
       /"token":"[A-Za-z0-9_-]+"/,
     )
 
-    const baiduScript = html.match(
-      /<script[^>]*id="baidu-tongji"[^>]*>([\s\S]*?)<\/script>/,
-    )
-    expect(baiduScript, `${path} 缺少百度统计`).not.toBeNull()
-    expect(baiduScript![1]).toMatch(
-      /https:\/\/hm\.baidu\.com\/hm\.js\?[A-Za-z0-9_-]+/,
-    )
-    expect(baiduScript![1]).toContain('async')
+    // 百度统计必须由访客明确同意后才在客户端插入，SSR HTML 只保留门控标记。
+    expect(html).toContain('data-baidu-analytics="consent-required"')
+    expect(html).not.toMatch(/<script[^>]*id="baidu-tongji"/)
+    expect(html).not.toContain('hm.baidu.com/hm.js')
 
-    // 两个统计脚本都挂在正文之后，且外部脚本使用 defer / 动态 async，
-    // 因此不会阻塞正文渲染。
+    // 统计脚本挂在正文之后且外部脚本使用 defer，不会阻塞正文渲染。
     const contentIndex = html.indexOf('<main')
     expect(contentIndex, `${path} 缺少正文`).toBeGreaterThan(-1)
     expect(html.indexOf('id="cloudflare-web-analytics"')).toBeGreaterThan(
       contentIndex,
     )
-    expect(html.indexOf('id="baidu-tongji"')).toBeGreaterThan(contentIndex)
   }
+})
+
+test('百度统计只在点击允许后加载，并把选择保存到 localStorage', async ({
+  page,
+}) => {
+  const baiduRequests: string[] = []
+  await page.route(/hm\.baidu\.com/, (route) => route.abort())
+  page.on('request', (request) => {
+    if (request.url().includes('hm.baidu.com')) {
+      baiduRequests.push(request.url())
+    }
+  })
+
+  await page.goto('/')
+
+  const consent = page.getByRole('complementary', {
+    name: /Cloudflare Web Analytics/,
+  })
+  await expect(consent).toBeVisible()
+  await expect(page.locator('script#baidu-tongji')).toHaveCount(0)
+  expect(baiduRequests).toEqual([])
+
+  await page.getByRole('button', { name: '允许百度统计' }).click()
+
+  const script = page.locator('script#baidu-tongji')
+  await expect(script).toHaveCount(1)
+  await expect(script).toHaveAttribute('src', /hm\.baidu\.com\/hm\.js\?/)
+  await expect(script).toHaveAttribute('async', '')
+  expect(baiduRequests.length).toBeGreaterThan(0)
+  expect(
+    await page.evaluate(() => window.localStorage.getItem('analytics-consent')),
+  ).toBe('granted')
+
+  await page.reload()
+  await expect(page.locator('script#baidu-tongji')).toHaveCount(1)
+  await expect(consent).toHaveCount(0)
+})
+
+test('拒绝百度统计后不再加载，也不会再次提示', async ({ page }) => {
+  const baiduRequests: string[] = []
+  await page.route(/hm\.baidu\.com/, (route) => route.abort())
+  page.on('request', (request) => {
+    if (request.url().includes('hm.baidu.com')) {
+      baiduRequests.push(request.url())
+    }
+  })
+
+  await page.goto('/')
+  await page.getByRole('button', { name: '仅使用无 Cookie 统计' }).click()
+
+  const consent = page.getByRole('complementary', {
+    name: /Cloudflare Web Analytics/,
+  })
+  await expect(consent).toHaveCount(0)
+  await expect(page.locator('script#baidu-tongji')).toHaveCount(0)
+  expect(baiduRequests).toEqual([])
+  expect(
+    await page.evaluate(() => window.localStorage.getItem('analytics-consent')),
+  ).toBe('denied')
+
+  await page.reload()
+  await expect(consent).toHaveCount(0)
+  await expect(page.locator('script#baidu-tongji')).toHaveCount(0)
 })
 
 test('隐私页说明统计、评论与公众号订阅的数据范围', async ({ page }) => {
@@ -55,7 +112,10 @@ test('隐私页说明统计、评论与公众号订阅的数据范围', async ({
 
   const homeResponse = await page.goto('/')
   expect(homeResponse?.status()).toBe(200)
-  await page.getByRole('link', { name: '隐私说明' }).click()
+  await page
+    .getByRole('contentinfo')
+    .getByRole('link', { name: '隐私说明' })
+    .click()
   await expect(page).toHaveURL(/\/privacy$/)
 
   const response = await page.goto('/privacy')
@@ -67,6 +127,7 @@ test('隐私页说明统计、评论与公众号订阅的数据范围', async ({
   await expect(main).toContainText('Cloudflare Web Analytics 不使用 Cookie')
   await expect(main).toContainText('百度统计')
   await expect(main).toContainText('百度统计会使用 Cookie')
+  await expect(main).toContainText('只有在你明确同意后')
   await expect(main).toContainText('IP 地址')
   await expect(main).toContainText('Giscus')
   await expect(main).toContainText('GitHub Discussions')

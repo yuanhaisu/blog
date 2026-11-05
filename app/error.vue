@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { LICENSE_URL } from '#shared/site-config.mjs'
+
 const props = defineProps<{
   error: {
     statusCode?: number
@@ -54,6 +56,11 @@ useHead({
     <footer class="site-footer">
       <p>© {{ year }} 袁海粟（Yuan Haisu）</p>
       <p>一人交付实验 · 中文 canonical</p>
+      <p>
+        除非另有说明，本站内容采用
+        <a :href="LICENSE_URL" rel="license">CC BY 4.0</a>
+        授权
+      </p>
     </footer>
   </div>
 </template>

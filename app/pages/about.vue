@@ -1,5 +1,6 @@
 <script setup lang="ts">
 const route = useRoute()
+const profiles = useProfiles()
 
 usePageSeo({
   title: `关于${PERSON.displayName} · ${SITE.name}`,
@@ -107,17 +108,7 @@ usePageSeo({
         <li>
           <a :href="`mailto:${PERSON.email}`">{{ PERSON.email }}</a>
         </li>
-        <li v-for="profile in PERSON_PROFILES" :key="profile.label">
-          <a
-            v-if="profile.href"
-            :href="profile.href"
-            rel="me noopener noreferrer"
-            target="_blank"
-          >
-            {{ profile.label }}：{{ profile.detail }}
-          </a>
-          <span v-else>{{ profile.label }}：{{ profile.detail }}</span>
-        </li>
+        <SiteProfileLinks :profiles="profiles" show-detail />
       </ul>
       <p>
         目前开放远程的后端 / 全栈 / AI 应用开发机会，也欢迎一人公司与独立开发者交流合作。邮件是最可靠的公开联系方式。

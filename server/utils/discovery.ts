@@ -1,7 +1,6 @@
 import { queryCollection } from '@nuxt/content/server'
 import type { H3Event } from 'h3'
-
-export const SITE_URL = 'https://yuanhaisu.com'
+import { SITE_ORIGIN } from '#shared/site-config.mjs'
 
 export type DiscoveryPost = {
   path: string
@@ -59,7 +58,7 @@ export function collectSeries(posts: DiscoveryPost[]): string[] {
 }
 
 export function absoluteUrl(path: string): string {
-  return `${SITE_URL}${path.startsWith('/') ? path : `/${path}`}`
+  return `${SITE_ORIGIN}${path.startsWith('/') ? path : `/${path}`}`
 }
 
 export function encodeSegment(value: string): string {

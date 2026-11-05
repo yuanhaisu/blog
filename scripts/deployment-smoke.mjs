@@ -110,9 +110,14 @@ function checkHeaders(headers, label) {
     `${label}: CSP allows Cloudflare Web Analytics and Baidu Analytics`,
   )
   check(
-    (csp.get('font-src') ?? []).includes('https://fonts.gstatic.com') &&
-      (csp.get('style-src') ?? []).includes('https://fonts.googleapis.com'),
-    `${label}: CSP allows configured font origins`,
+    (csp.get('font-src') ?? []).includes("'self'") &&
+      !(csp.get('font-src') ?? []).some((source) =>
+        /fonts\.(?:googleapis|gstatic)\.com/.test(source),
+      ) &&
+      !(csp.get('style-src') ?? []).some((source) =>
+        /fonts\.googleapis\.com/.test(source),
+      ),
+    `${label}: CSP keeps fonts self-hosted`,
   )
   check(
     (csp.get('worker-src') ?? []).includes("'self'") &&

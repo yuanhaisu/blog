@@ -37,6 +37,18 @@ test('404 页的入口可以导航到文章列表', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1, name: '归档' })).toBeVisible()
 })
 
+test('404 页页脚展示 CC BY 4.0 授权声明', async ({ page }) => {
+  await page.goto(missingPath)
+
+  const license = page
+    .locator('.site-footer')
+    .getByRole('link', { name: 'CC BY 4.0', exact: true })
+  await expect(license).toHaveAttribute(
+    'href',
+    'https://creativecommons.org/licenses/by/4.0/',
+  )
+})
+
 test.describe('禁用 JavaScript', () => {
   test.use({ javaScriptEnabled: false })
 

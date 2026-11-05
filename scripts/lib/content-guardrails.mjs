@@ -1,9 +1,12 @@
 import { existsSync } from 'node:fs'
-import { readdir, readFile } from 'node:fs/promises'
+import { readFile } from 'node:fs/promises'
 import path from 'node:path'
 import { pathToFileURL } from 'node:url'
 import { postFrontmatterSchema } from '../../shared/content-schema.mjs'
+import { contentRoute, walkFiles } from '../../shared/content-files.mjs'
 import { parseFrontmatter } from '../../shared/frontmatter.mjs'
+
+export { collectDraftRoutes } from '../../shared/content-files.mjs'
 
 const DEFAULT_CONFIG = {
   clientNames: [],
@@ -117,12 +120,32 @@ export async function runContentGuardrails(options = {}) {
     routes.add(route)
   }
 
+  // Dynamic taxonomy routes are generated from published posts; add them so
+  // articles can link to their own tag and series pages without false errors.
+  for (const post of posts) {
+    if (!post.valid || post.draft) {
+      continue
+    }
+
+    for (const tag of post.frontmatter.tags) {
+      routes.add(`/tags/${tag}`)
+    }
+
+    if (post.frontmatter.series) {
+      routes.add(`/series/${post.frontmatter.series}`)
+    }
+  }
+
   for (const post of posts) {
     if (!post.valid || post.draft) {
       continue
     }
 
     for (const error of checkInternalLinks(post, routes)) {
+      errors.push(`${post.file}: ${error}`)
+    }
+
+    for (const error of checkLaunchRequirements(post)) {
       errors.push(`${post.file}: ${error}`)
     }
   }
@@ -137,29 +160,6 @@ export async function runContentGuardrails(options = {}) {
     publishedRoutes: published.map((post) => post.route).sort(),
     draftRoutes: drafts.map((post) => post.route).sort(),
   }
-}
-
-export async function collectDraftRoutes(options = {}) {
-  const rootDir = path.resolve(options.rootDir ?? process.cwd())
-  const contentDir = path.resolve(options.contentDir ?? path.join(rootDir, 'content'))
-  const postsDir = path.join(contentDir, 'posts')
-
-  if (!existsSync(postsDir)) {
-    return []
-  }
-
-  const files = await walkFiles(postsDir, (file) => file.toLowerCase().endsWith('.md'))
-  const routes = []
-
-  for (const absPath of files) {
-    const raw = await readFile(absPath, 'utf8')
-    const parsed = parseFrontmatter(raw)
-    if (!parsed.error && parsed.data?.draft === true) {
-      routes.push(contentRoute(path.relative(contentDir, absPath)))
-    }
-  }
-
-  return routes
 }
 
 export function formatGuardrailReport(result) {
@@ -233,12 +233,6 @@ function formatFieldPath(parts) {
     .join('')
 }
 
-function contentRoute(relativePath) {
-  const posix = relativePath.split(path.sep).join('/').replace(/\.md$/i, '')
-  const withoutIndex = posix.replace(/\/index$/, '')
-  return `/${withoutIndex.replace(/^\/+/, '')}`
-}
-
 async function collectAppRoutes(appDir) {
   const pagesDir = path.join(appDir, 'pages')
   const files = await walkFiles(pagesDir, (file) => /\.(?:vue|ts|js|mjs|tsx|jsx)$/i.test(file))
@@ -284,36 +278,6 @@ function pageRoute(relativePath) {
   return `/${withoutIndex.replace(/^\/+/, '')}`.replace(/\/$/, '') || '/'
 }
 
-async function walkFiles(directory, predicate) {
-  const files = []
-
-  async function visit(current) {
-    let entries
-    try {
-      entries = await readdir(current, { withFileTypes: true })
-    } catch (error) {
-      if (error?.code === 'ENOENT') {
-        return
-      }
-      throw error
-    }
-
-    entries.sort((a, b) => a.name.localeCompare(b.name))
-
-    for (const entry of entries) {
-      const absPath = path.join(current, entry.name)
-      if (entry.isDirectory()) {
-        await visit(absPath)
-      } else if (entry.isFile() && predicate(absPath)) {
-        files.push(absPath)
-      }
-    }
-  }
-
-  await visit(directory)
-  return files
-}
-
 function checkInternalLinks(post, routes) {
   const masked = maskCode(post.body)
   const links = extractLinks(masked)
@@ -341,6 +305,57 @@ function checkInternalLinks(post, routes) {
   return errors
 }
 
+/**
+ * Launch articles must be self-contained entry points: at least three
+ * distinct internal links and one original site-local diagram/image.
+ *
+ * The explicit `launch: true` flag keeps test fixtures and pre-launch posts
+ * exempt from a rule that only applies to the public launch set.
+ */
+function checkLaunchRequirements(post) {
+  if (post.frontmatter.launch !== true) {
+    return []
+  }
+
+  const links = extractLinks(maskCode(post.body))
+  const internalLinks = new Set()
+  let hasLocalImage = false
+
+  for (const link of links) {
+    const destination = normalizeDestination(link.destination)
+    if (!destination) {
+      continue
+    }
+
+    const resolved = resolveInternalPath(destination, post.route)
+    if (!resolved) {
+      continue
+    }
+
+    if (link.image) {
+      hasLocalImage = true
+    } else {
+      internalLinks.add(resolved)
+    }
+  }
+
+  const errors = []
+
+  if (internalLinks.size < 3) {
+    errors.push(
+      `launch 文章至少需要 3 个不同的站内链接（当前 ${internalLinks.size} 个）`,
+    )
+  }
+
+  if (!hasLocalImage) {
+    errors.push(
+      'launch 文章至少需要 1 张站内原创配图（Markdown ![...](/...) 或 <img src="/...">）',
+    )
+  }
+
+  return errors
+}
+
 function maskCode(body) {
   const withoutFences = body.replace(
     /^[ \t]{0,3}(`{3,}|~{3,})[^\n]*\n[\s\S]*?^[ \t]{0,3}\1[ \t]*$/gm,
@@ -354,19 +369,34 @@ function extractLinks(maskedBody) {
   const links = []
   let match
 
-  const markdownLink = /!?\[[^\]]*\]\(\s*(<[^>\n]+>|[^\s)]+)(?:\s+["'][^"']*["'])?\s*\)/g
+  const markdownLink =
+    /(!?)\[[^\]]*\]\(\s*(<[^>\n]+>|[^\s)]+)(?:\s+["'][^"']*["'])?\s*\)/g
   while ((match = markdownLink.exec(maskedBody)) !== null) {
-    links.push({ destination: match[1], index: match.index })
+    links.push({
+      destination: match[2],
+      index: match.index,
+      image: match[1] === '!',
+    })
   }
 
-  const referenceDefinition = /^[ \t]{0,3}\[[^\]]+\]:[ \t]*(<[^>\n]+>|\S+)/gm
+  const referenceDefinition =
+    /^[ \t]{0,3}(!?)\[[^\]]+\]:[ \t]*(<[^>\n]+>|\S+)/gm
   while ((match = referenceDefinition.exec(maskedBody)) !== null) {
-    links.push({ destination: match[1], index: match.index })
+    links.push({
+      destination: match[2],
+      index: match.index,
+      image: match[1] === '!',
+    })
   }
 
-  const htmlAttribute = /\b(?:href|src)[ \t]*=[ \t]*(?:"([^"]*)"|'([^']*)')/gi
+  const htmlAttribute =
+    /\b(href|src)[ \t]*=[ \t]*(?:"([^"]*)"|'([^']*)')/gi
   while ((match = htmlAttribute.exec(maskedBody)) !== null) {
-    links.push({ destination: match[1] ?? match[2], index: match.index })
+    links.push({
+      destination: match[2] ?? match[3],
+      index: match.index,
+      image: match[1].toLowerCase() === 'src',
+    })
   }
 
   return links

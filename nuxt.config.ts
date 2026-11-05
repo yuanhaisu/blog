@@ -1,3 +1,5 @@
+import rehypeLazyImages from './shared/rehype-lazy-images.mjs'
+
 /**
  * Apply a stored or system theme before first paint so a cold load never
  * flashes the wrong palette. Without JavaScript, the CSS media query still
@@ -20,6 +22,9 @@ export default defineNuxtConfig({
   content: {
     build: {
       markdown: {
+        rehypePlugins: {
+          'lazy-images': { instance: rehypeLazyImages },
+        },
         highlight: {
           theme: {
             default: 'github-light-high-contrast',
@@ -40,6 +45,9 @@ export default defineNuxtConfig({
       giscusRepoId: '',
       giscusCategory: '',
       giscusCategoryId: '',
+      // 已确认的国内平台主页 URL；留空时页面显示明确占位，且不进入 sameAs。
+      zhihuUrl: '',
+      wechatUrl: '',
     },
   },
   app: {

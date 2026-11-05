@@ -1,18 +1,17 @@
-/**
- * Stable identifier for the site owner's Person entity. Article-level
- * `BlogPosting.author` and `publisher` reference this id instead of repeating
- * the full Person node.
- */
-export const PERSON_ID = `${SITE.url}/#person`
+import { PERSON_ID } from '#shared/site-config.mjs'
+import { PERSON } from './site'
 
 /**
  * Canonical schema.org Person node for the site owner.
  *
  * The `@id` is stable so that article-level `BlogPosting.author` and
  * `publisher` nodes can reference the same entity. Only confirmed profile URLs
- * belong in `sameAs`; see PERSON.sameAs.
+ * belong in `sameAs`: defaults omit 知乎/微信公众号 until a real URL is
+ * supplied through the profile config path.
  */
-export function buildPersonJsonLd() {
+export function buildPersonJsonLd(profileSameAs: string[] = []) {
+  const sameAs = [...new Set([...PERSON.sameAs, ...profileSameAs])]
+
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
@@ -25,6 +24,6 @@ export function buildPersonJsonLd() {
     jobTitle: PERSON.jobTitle,
     description: PERSON.description,
     knowsAbout: [...PERSON.knowsAbout],
-    sameAs: [...PERSON.sameAs],
+    sameAs,
   }
 }
