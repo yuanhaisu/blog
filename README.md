@@ -61,9 +61,18 @@ npm run build
 
 `wrangler.toml` 已声明 `pages_build_output_dir = ".output/public"`；也可以在项目根目录执行 `npx wrangler pages deploy .output/public` 手动发布。真实预览域名由 Cloudflare Pages 项目生成，需要账号侧配置，仓库中不保存任何凭据。
 
+部署加固细节（`www` 301、Always Use HTTPS、HSTS/CSP、预览 HTTPS 与冒烟检查）见[部署与加固](docs/deployment.md)。仓库侧可先运行：
+
+```bash
+npm run smoke:deployment   # 检查构建产物、200、HSTS/CSP 与 www 301（本地模拟）
+npm run check:secrets      # 检查仓库不含凭据与 .env
+```
+
+账号侧的 Pages 项目、DNS、Always Use HTTPS 与 `www` Bulk Redirect 仍需在 Cloudflare Dashboard 完成，且无法由仓库代做。
+
 ## 当前状态
 
-站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、首篇中文文章、无 JavaScript 可读的正文与 Playwright 冒烟测试。Cloudflare Pages 的真实预览部署待账号侧完成。
+站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、首篇中文文章、无 JavaScript 可读的正文与 Playwright 冒烟测试。部署加固的仓库侧配置（HSTS/CSP、`www` 跳转声明、冒烟与密钥扫描）已就绪；Cloudflare Pages 的真实预览部署、DNS 与 `www` 跳转仍待账号侧完成，详见[部署与加固](docs/deployment.md)。
 
 ## 关键约束
 

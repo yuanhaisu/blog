@@ -10,7 +10,9 @@
     "preview": "nuxt preview",
     "validate:content": "node scripts/validate-content.mjs",
     "test": "playwright test",
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "smoke:deployment": "node scripts/deployment-smoke.mjs",
+    "check:secrets": "node scripts/check-no-secrets.mjs"
   },
   "dependencies": {
     "@nuxt/content": "~3.16.2",

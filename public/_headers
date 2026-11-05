@@ -1,0 +1,24 @@
+# Cloudflare Pages response headers for https://yuanhaisu.com
+# https://developers.cloudflare.com/pages/configuration/headers/
+#
+# CSP notes:
+# - Nuxt emits an inline import map and an inline window.__NUXT__ bootstrap,
+#   so script-src needs 'unsafe-inline' for the generated static HTML.
+# - Pagefind loads same-origin WebAssembly and runs search in a worker, so it
+#   needs 'wasm-unsafe-eval' and worker-src 'self' blob:.
+# - Giscus is embedded from https://giscus.app (script + iframe).
+# - Cloudflare Web Analytics uses static.cloudflareinsights.com and
+#   cloudflareinsights.com; Baidu Analytics uses hm.baidu.com/hmcdn.baidu.com.
+# - Fonts are self-hosted first; Google Fonts origins are allowlisted for the
+#   subsetting pipeline and can be removed if fonts stay fully self-hosted.
+/*
+  Strict-Transport-Security: max-age=63072000; includeSubDomains
+  Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' 'wasm-unsafe-eval' https://giscus.app https://static.cloudflareinsights.com https://hm.baidu.com https://hmcdn.baidu.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' data: https://fonts.gstatic.com; img-src 'self' data: https://hm.baidu.com https://hmcdn.baidu.com; connect-src 'self' https://giscus.app https://cloudflareinsights.com https://static.cloudflareinsights.com https://hm.baidu.com https://hmcdn.baidu.com; frame-src https://giscus.app; worker-src 'self' blob:; manifest-src 'self'; media-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'none'; upgrade-insecure-requests
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), payment=(), usb=()
+
+# Hashed build assets are safe to cache for a year.
+/_nuxt/*
+  Cache-Control: public, max-age=31536000, immutable
