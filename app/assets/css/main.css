@@ -495,3 +495,87 @@ button:focus-visible {
     padding-top: 2.25rem;
   }
 }
+
+.post-comments {
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--rule);
+}
+
+.post-comments h2 {
+  margin: 0 0 0.5rem;
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  letter-spacing: 0.06em;
+}
+
+.post-comments-intro,
+.post-comments-direct,
+.post-comments-fallback {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.post-comments-domestic {
+  margin: 1.25rem 0;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.35rem;
+  background: var(--surface);
+  font-size: 0.9rem;
+}
+
+.post-comments-domestic h3 {
+  margin: 0 0 0.4rem;
+  font-family: var(--font-serif);
+  font-size: 0.95rem;
+}
+
+.post-comments-domestic p {
+  margin: 0 0 0.4rem;
+}
+
+.post-comments-domestic p:last-child {
+  margin-bottom: 0;
+}
+
+.post-comments-domestic-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem 1rem;
+  margin: 0.5rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.post-comments-domestic-links a {
+  text-decoration: underline;
+}
+
+.post-comments-loader {
+  margin: 1rem 0;
+}
+
+.post-comments-load {
+  padding: 0.4rem 1rem;
+  border: 1px solid var(--rule);
+  border-radius: 0.3rem;
+  background: var(--surface);
+  color: var(--ink);
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.post-comments-load:hover,
+.post-comments-load:focus-visible {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+.post-comments-error {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
