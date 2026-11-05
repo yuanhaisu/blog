@@ -74,14 +74,70 @@ a:hover {
   margin: 0;
 }
 
+.site-header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+}
+
 .site-nav {
   display: flex;
   gap: 1rem;
-  font-size: 0.9rem;
 }
 
 .site-nav a {
+  font-size: 0.85rem;
   text-decoration: none;
+}
+
+.about-header {
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.about-identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.about-avatar {
+  width: 7.5rem;
+  height: 7.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--surface);
+  object-fit: cover;
+}
+
+.about-header h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.about-lede {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  max-width: 34rem;
+}
+
+.profile-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.profile-list li {
+  padding: 0.35rem 0;
+  border-bottom: 1px dotted var(--rule);
+}
+
+.profile-list li:last-child {
+  border-bottom: 0;
 }
 
 .site-main {
