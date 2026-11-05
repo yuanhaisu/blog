@@ -54,6 +54,7 @@ const publicPages = [
   { path: '/about', type: 'website' },
   { path: '/archive', type: 'website' },
   { path: '/privacy', type: 'website' },
+  { path: '/search', type: 'website' },
   ...postPaths.map((path) => ({ path, type: 'article' as const })),
   { path: '/series/test-series', type: 'website' },
   ...tagNames.map((tag) => ({
@@ -122,6 +123,21 @@ test('每个公开页面输出唯一且字段完整的 WebSite JSON-LD', async (
     })
     expect(action['query-input']).toBe('required name=search_term_string')
   }
+})
+
+test('搜索页 canonical 与 og:url 忽略查询参数', async ({ page }) => {
+  const response = await page.goto('/search?q=test')
+  expect(response?.status()).toBe(200)
+
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+    'href',
+    'https://yuanhaisu.com/search',
+  )
+  await expect(page.locator('meta[property="og:url"]')).toHaveAttribute(
+    'content',
+    'https://yuanhaisu.com/search',
+  )
+  expect(nodesOfType(await readJsonLd(page), 'WebSite')).toHaveLength(1)
 })
 
 test('文章日期使用 ISO 8601，updated 反映到 dateModified', async ({ page }) => {
