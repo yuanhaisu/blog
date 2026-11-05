@@ -61,7 +61,7 @@ CI 工作流 `.github/workflows/ci.yml` 在 Pull Request、推送到 `main` / `f
 
 ## 2. 上线内容：待完成（内容工作，当前未写）
 
-以下 5 篇是 v1 上线门槛（见 `docs/plan.md` §5.1–5.2）。当前**一篇都未写**，因此不满足正式上线条件。
+以下 5 篇是 v1 上线门槛（见 `docs/plan.md` §5.1–5.2）。当前**一篇都未写**，因此不满足正式上线条件。详细提纲、互链、配图与平台改编方案见 [`docs/content-outlines.md`](content-outlines.md)。
 
 ### 2.1 3 篇中文博客（PENDING）
 
