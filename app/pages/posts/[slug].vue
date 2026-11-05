@@ -98,10 +98,10 @@ useHead({
 </script>
 
 <template>
-  <article v-if="post" class="post">
+  <article v-if="post" class="post" data-pagefind-body>
     <header class="post-header">
       <p class="eyebrow">一人交付笔记</p>
-      <h1>{{ post.title }}</h1>
+      <h1 data-pagefind-meta="title">{{ post.title }}</h1>
       <p class="post-meta">
         <span>作者：袁海粟</span>
         <time :datetime="post.date">{{ post.date }}</time>

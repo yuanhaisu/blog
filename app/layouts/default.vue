@@ -22,6 +22,12 @@ function isCurrent(path: string) {
             首页
           </NuxtLink>
           <NuxtLink
+            to="/search"
+            :aria-current="isCurrent('/search') ? 'page' : undefined"
+          >
+            搜索
+          </NuxtLink>
+          <NuxtLink
             to="/archive"
             :aria-current="isCurrent('/archive') ? 'page' : undefined"
           >
