@@ -14,8 +14,11 @@ if (!posts.value || posts.value.length === 0) {
   })
 }
 
-useHead({
+usePageSeo({
   title: `标签：${tag} · ${SITE.name}`,
+  description: `标签「${tag}」下的全部已发布文章。`,
+  path: route.path,
+  ogTitle: `标签：${tag}`,
 })
 </script>
 

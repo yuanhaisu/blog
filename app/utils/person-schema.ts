@@ -1,4 +1,11 @@
 /**
+ * Stable identifier for the site owner's Person entity. Article-level
+ * `BlogPosting.author` and `publisher` reference this id instead of repeating
+ * the full Person node.
+ */
+export const PERSON_ID = `${SITE.url}/#person`
+
+/**
  * Canonical schema.org Person node for the site owner.
  *
  * The `@id` is stable so that article-level `BlogPosting.author` and
@@ -9,7 +16,7 @@ export function buildPersonJsonLd() {
   return {
     '@context': 'https://schema.org',
     '@type': 'Person',
-    '@id': `${SITE.url}/#person`,
+    '@id': PERSON_ID,
     name: PERSON.name,
     alternateName: [...PERSON.alternateName],
     url: PERSON.url,

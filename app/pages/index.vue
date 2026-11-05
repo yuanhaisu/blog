@@ -1,16 +1,15 @@
 <script setup lang="ts">
+const route = useRoute()
+
 const { data: posts } = await useAsyncData('home-posts', () =>
   queryPublishedPosts().order('date', 'DESC').all(),
 )
 
-useHead({
-  title: '一人交付笔记',
-  meta: [
-    {
-      name: 'description',
-      content: SITE.description,
-    },
-  ],
+usePageSeo({
+  title: SITE.name,
+  description: SITE.description,
+  path: route.path,
+  ogTitle: SITE.name,
 })
 </script>
 

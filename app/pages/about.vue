@@ -1,13 +1,12 @@
 <script setup lang="ts">
-useHead({
+const route = useRoute()
+
+usePageSeo({
   title: `关于${PERSON.displayName} · ${SITE.name}`,
-  meta: [
-    {
-      name: 'description',
-      content:
-        '袁海粟（Yuan Haisu）的身份锚点：11 年后端与分布式系统研发、4 年半数据分析部门主管、AI 模型服务与 LLM 工具编排，以及一人交付多租户 SaaS 的实践记录。',
-    },
-  ],
+  description:
+    '袁海粟（Yuan Haisu）的身份锚点：11 年后端与分布式系统研发、4 年半数据分析部门主管、AI 模型服务与 LLM 工具编排，以及一人交付多租户 SaaS 的实践记录。',
+  path: route.path,
+  ogTitle: `关于${PERSON.displayName}`,
 })
 </script>
 

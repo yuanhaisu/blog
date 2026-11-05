@@ -89,12 +89,35 @@ const { data: seriesMeta } = await useAsyncData(
       : Promise.resolve(null),
 )
 
-const canonicalUrl = `${SITE.url}${route.path}`
-
-useHead({
+const { canonicalUrl } = usePageSeo({
   title: `${post.value.title} · ${SITE.name}`,
-  link: [{ rel: 'canonical', href: canonicalUrl }],
+  description: post.value.description,
+  path: route.path,
+  type: 'article',
+  ogTitle: post.value.title,
+  publishedTime: post.value.date,
+  modifiedTime: post.value.updated ?? post.value.date,
+  locale: post.value.lang === 'en' ? 'en_US' : 'zh_CN',
 })
+
+useJsonLd([
+  {
+    key: 'article-blogposting',
+    data: buildBlogPostingJsonLd(
+      post.value,
+      canonicalUrl,
+      absoluteUrl(SITE.defaultImage),
+    ),
+  },
+  {
+    key: 'article-breadcrumb',
+    data: buildBreadcrumbListJsonLd([
+      { name: '首页', url: absoluteUrl('/') },
+      { name: '归档', url: absoluteUrl('/archive') },
+      { name: post.value.title, url: canonicalUrl },
+    ]),
+  },
+])
 </script>
 
 <template>

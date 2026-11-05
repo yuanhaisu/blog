@@ -1,13 +1,12 @@
 <script setup lang="ts">
 const person = buildPersonJsonLd()
-// Escape `<` so the serialized data can never close the script element.
-const serialized = JSON.stringify(person).replace(/</g, '\\u003c')
 
 useHead({
   script: [
     {
+      key: 'person-jsonld',
       type: 'application/ld+json',
-      innerHTML: serialized,
+      innerHTML: serializeJsonLd(person),
       tagPriority: 'high',
     },
   ],

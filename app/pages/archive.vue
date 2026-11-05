@@ -1,12 +1,17 @@
 <script setup lang="ts">
+const route = useRoute()
+
 const { data: posts } = await useAsyncData('archive-posts', () =>
   fetchPublishedPostsByDate(),
 )
 
 const groups = computed(() => groupPostsByMonth(posts.value ?? []))
 
-useHead({
+usePageSeo({
   title: `归档 · ${SITE.name}`,
+  description: `按时间浏览${SITE.name}的全部已发布文章。`,
+  path: route.path,
+  ogTitle: '归档',
 })
 </script>
 

@@ -21,8 +21,13 @@ if (!posts.value || posts.value.length === 0) {
 
 const heading = computed(() => series.value?.title ?? seriesSlug)
 
-useHead({
+usePageSeo({
   title: `专题：${heading.value} · ${SITE.name}`,
+  description:
+    series.value?.description ??
+    `专题「${heading.value}」下的全部已发布文章，按阅读顺序排列。`,
+  path: route.path,
+  ogTitle: `专题：${heading.value}`,
 })
 </script>
 
