@@ -1,5 +1,5 @@
 export default defineNuxtConfig({
-  modules: ['@nuxt/content'],
+  modules: ['@nuxt/content', './modules/content-guardrails'],
   compatibilityDate: '2026-11-05',
   devtools: { enabled: false },
   css: ['~/assets/css/main.css'],
