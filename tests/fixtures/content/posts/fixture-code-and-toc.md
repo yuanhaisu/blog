@@ -4,8 +4,8 @@ description: 用于验证文章页目录、代码高亮、复制、上下篇与�
 date: 2026-11-06
 updated: 2026-11-08
 tags:
-  - 一人交付
-  - AI Agent
+  - 夹具关联
+  - 夹具标签
 series: fixture-series
 order: 1
 draft: false

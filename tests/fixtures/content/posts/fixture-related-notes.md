@@ -3,7 +3,7 @@ title: 测试夹具：用于上下篇与相关文章
 description: 用于验证文章顺序导航与相关文章排序的测试夹具，不属于正式发布内容。
 date: 2026-11-07
 tags:
-  - 一人交付
+  - 夹具关联
 draft: false
 featured: false
 lang: zh

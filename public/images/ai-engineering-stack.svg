@@ -1,0 +1,52 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="title desc">
+  <title id="title">AI 工程落地的三层栈</title>
+  <desc id="desc">模型服务层使用 Triton、YOLOv5、PaddleOCR 与 CPU/GPU 双版本；LLM 应用层做意图识别、工具编排与语义鉴敏；数据与算法层做事件采集、特征工程与事件序列正则。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .blue { fill: #eff6ff; stroke: #2563eb; }
+      .green { fill: #ecfdf5; stroke: #059669; }
+      .amber { fill: #fffbeb; stroke: #d97706; }
+      .title { font: 600 20px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .label { font: 600 15px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .small { font: 12.5px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #475569; }
+      .arrow { stroke: #64748b; stroke-width: 1.7; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect class="bg" width="960" height="480"/>
+  <text class="title" x="480" y="38" text-anchor="middle">AI 工程落地的三层栈</text>
+
+  <rect class="blue" x="70" y="70" width="650" height="104" rx="14"/>
+  <text class="label" x="395" y="104" text-anchor="middle">模型服务层</text>
+  <text class="small" x="395" y="128" text-anchor="middle">YOLOv5 + PaddleOCR（det + rec）→ ONNX → Triton Inference Server</text>
+  <text class="small" x="395" y="150" text-anchor="middle">5 个模型仓库 · ONNX Runtime + Python backend · CPU/GPU 双版本</text>
+
+  <rect class="green" x="70" y="200" width="650" height="104" rx="14"/>
+  <text class="label" x="395" y="234" text-anchor="middle">LLM 应用层</text>
+  <text class="small" x="395" y="258" text-anchor="middle">意图识别 · Function Calling / 工具编排 · 语义鉴敏</text>
+  <text class="small" x="395" y="280" text-anchor="middle">私有化部署：数据不出客户环境</text>
+
+  <rect class="amber" x="70" y="330" width="650" height="104" rx="14"/>
+  <text class="label" x="395" y="364" text-anchor="middle">数据 / 算法层</text>
+  <text class="small" x="395" y="388" text-anchor="middle">千万级/日事件 → Pandas/NumPy → 约 30 万条样本 → 日均百万级预测</text>
+  <text class="small" x="395" y="410" text-anchor="middle">事件序列正则：AST → 后缀 IR → Thompson ε-NFA</text>
+
+  <path class="arrow" d="M 395 178 L 395 196"/>
+  <path class="arrow" d="M 395 308 L 395 326"/>
+
+  <rect class="box" x="750" y="70" width="170" height="364" rx="14" stroke-dasharray="5 4"/>
+  <text class="label" x="835" y="110" text-anchor="middle">交付约束</text>
+  <text class="small" x="835" y="144" text-anchor="middle">私有化部署</text>
+  <text class="small" x="835" y="172" text-anchor="middle">无 GPU 可降级</text>
+  <text class="small" x="835" y="200" text-anchor="middle">可观测</text>
+  <text class="small" x="835" y="228" text-anchor="middle">可回滚</text>
+  <text class="small" x="835" y="256" text-anchor="middle">批量吞吐</text>
+  <text class="small" x="835" y="284" text-anchor="middle">数据不出门</text>
+  <text class="small" x="835" y="330" text-anchor="middle">先服务，</text>
+  <text class="small" x="835" y="352" text-anchor="middle">再编排，</text>
+  <text class="small" x="835" y="374" text-anchor="middle">最后算法闭环</text>
+</svg>

@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-labelledby="title desc">
+  <title id="title">一人 + agent 的交付流水线</title>
+  <desc id="desc">人负责判断与边界，主会话负责编排，slice-worker 负责实现，slice-supervisor 负责评审与真机验证，检查点与证据负责复核。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .accent { fill: #eff6ff; stroke: #2563eb; }
+      .green { fill: #ecfdf5; stroke: #059669; }
+      .amber { fill: #fffbeb; stroke: #d97706; }
+      .title { font: 600 20px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .label { font: 600 15px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .small { font: 12.5px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #475569; }
+      .note { font: 13px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #334155; }
+      .arrow { stroke: #64748b; stroke-width: 1.8; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect class="bg" width="960" height="360"/>
+  <text class="title" x="480" y="42" text-anchor="middle">一人 + agent 的交付流水线</text>
+
+  <rect class="box" x="30" y="120" width="150" height="96" rx="12"/>
+  <text class="label" x="105" y="158" text-anchor="middle">人</text>
+  <text class="small" x="105" y="182" text-anchor="middle">判断 / 边界 / 取舍</text>
+
+  <rect class="accent" x="210" y="120" width="150" height="96" rx="12"/>
+  <text class="label" x="285" y="158" text-anchor="middle">主会话</text>
+  <text class="small" x="285" y="182" text-anchor="middle">只编排，不读源码</text>
+
+  <rect class="box" x="390" y="120" width="150" height="96" rx="12"/>
+  <text class="label" x="465" y="158" text-anchor="middle">slice-worker</text>
+  <text class="small" x="465" y="182" text-anchor="middle">实现一个可回滚切片</text>
+
+  <rect class="green" x="570" y="120" width="150" height="96" rx="12"/>
+  <text class="label" x="645" y="158" text-anchor="middle">slice-supervisor</text>
+  <text class="small" x="645" y="182" text-anchor="middle">全新上下文 · 对抗评审</text>
+
+  <rect class="amber" x="750" y="120" width="150" height="96" rx="12"/>
+  <text class="label" x="825" y="158" text-anchor="middle">检查点 / 证据</text>
+  <text class="small" x="825" y="182" text-anchor="middle">PROGRESS.md + validator</text>
+
+  <path class="arrow" d="M 184 168 L 204 168"/>
+  <path class="arrow" d="M 364 168 L 384 168"/>
+  <path class="arrow" d="M 544 168 L 564 168"/>
+  <path class="arrow" d="M 724 168 L 744 168"/>
+
+  <rect class="box" x="210" y="262" width="510" height="52" rx="10" stroke-dasharray="5 4"/>
+  <text class="note" x="465" y="293" text-anchor="middle">verdict / 失败路径 / 回滚证据 回到主会话，决定是否进入下一阶段</text>
+  <path class="arrow" d="M 645 220 L 645 250 L 465 250 L 465 258"/>
+
+  <text class="small" x="480" y="342" text-anchor="middle">人负责判断，agent 负责执行，证据负责复核</text>
+</svg>

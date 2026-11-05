@@ -3,7 +3,7 @@ import { expect, test } from '@playwright/test'
 test('文章页链接到所属的每个标签', async ({ page }) => {
   await page.goto('/posts/fixture-manifesto')
 
-  for (const tag of ['一人交付', '个人品牌', 'AI Agent']) {
+  for (const tag of ['夹具关联', '夹具标签']) {
     await expect(
       page.getByRole('link', { name: tag, exact: true }),
     ).toHaveAttribute('href', `/tags/${encodeURIComponent(tag)}`)

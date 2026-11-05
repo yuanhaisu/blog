@@ -1,0 +1,66 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="title desc">
+  <title id="title">养成星球的三端与后端架构</title>
+  <desc id="desc">老师端、家长端两个微信小程序和管理后台，通过 API 访问 Go 后端；后端使用 MySQL、Redis、Casbin 权限，并接入人脸识别 Provider。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .accent { fill: #eff6ff; stroke: #2563eb; }
+      .green { fill: #ecfdf5; stroke: #059669; }
+      .amber { fill: #fffbeb; stroke: #d97706; }
+      .title { font: 600 20px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .label { font: 600 14px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .small { font: 12px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #475569; }
+      .arrow { stroke: #64748b; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect class="bg" width="960" height="480"/>
+  <text class="title" x="480" y="38" text-anchor="middle">养成星球：三端 + Go 后端 + 多租户</text>
+
+  <rect class="accent" x="30" y="76" width="210" height="58" rx="10"/>
+  <text class="label" x="135" y="101" text-anchor="middle">老师端小程序</text>
+  <text class="small" x="135" y="121" text-anchor="middle">uni-app + Vue 3</text>
+
+  <rect class="accent" x="30" y="154" width="210" height="58" rx="10"/>
+  <text class="label" x="135" y="179" text-anchor="middle">家长端小程序</text>
+  <text class="small" x="135" y="199" text-anchor="middle">uni-app + Vue 3</text>
+
+  <rect class="accent" x="30" y="232" width="210" height="58" rx="10"/>
+  <text class="label" x="135" y="257" text-anchor="middle">管理后台</text>
+  <text class="small" x="135" y="277" text-anchor="middle">Nuxt 3 + Element Plus</text>
+
+  <rect class="box" x="330" y="118" width="260" height="170" rx="12"/>
+  <text class="label" x="460" y="146" text-anchor="middle">Go 后端（Gin + GORM）</text>
+  <text class="small" x="460" y="174" text-anchor="middle">handler → service → repository → domain</text>
+  <text class="small" x="460" y="198" text-anchor="middle">JWT · Casbin RBAC · Wire</text>
+  <text class="small" x="460" y="222" text-anchor="middle">约 300 个接口 · 70 张表</text>
+  <text class="small" x="460" y="246" text-anchor="middle">所有业务表带 tenant_id</text>
+
+  <path class="arrow" d="M 244 105 L 326 150"/>
+  <path class="arrow" d="M 244 183 L 326 183"/>
+  <path class="arrow" d="M 244 261 L 326 216"/>
+
+  <rect class="green" x="690" y="76" width="240" height="58" rx="10"/>
+  <text class="label" x="810" y="101" text-anchor="middle">MySQL</text>
+  <text class="small" x="810" y="121" text-anchor="middle">业务数据 · 多租户隔离</text>
+
+  <rect class="green" x="690" y="154" width="240" height="58" rx="10"/>
+  <text class="label" x="810" y="179" text-anchor="middle">Redis</text>
+  <text class="small" x="810" y="199" text-anchor="middle">会话 · 缓存 · 幂等</text>
+
+  <rect class="amber" x="690" y="232" width="240" height="58" rx="10"/>
+  <text class="label" x="810" y="257" text-anchor="middle">人脸识别 Provider</text>
+  <text class="small" x="810" y="277" text-anchor="middle">腾讯云 IAI · 1:N 检索</text>
+
+  <path class="arrow" d="M 594 168 L 686 105"/>
+  <path class="arrow" d="M 594 183 L 686 183"/>
+  <path class="arrow" d="M 594 216 L 686 261"/>
+
+  <rect class="box" x="330" y="330" width="600" height="100" rx="12" stroke-dasharray="5 4"/>
+  <text class="label" x="630" y="360" text-anchor="middle">交付约束</text>
+  <text class="small" x="630" y="386" text-anchor="middle">跨园所强制隔离 · 儿童照片仅授权家长可见 · 供应商可替换</text>
+  <text class="small" x="630" y="408" text-anchor="middle">API 契约优先 · 三端共享设计 Token · Go testify + 前端 Vitest</text>
+</svg>

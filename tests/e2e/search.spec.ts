@@ -21,7 +21,7 @@ test('中文查询命中预期文章并显示包含查询词的上下文摘要',
 
   await page.getByRole('link', { name: '搜索' }).click()
   const searchbox = page.getByRole('searchbox', { name: '搜索文章' })
-  await searchbox.fill('分布式系统')
+  await searchbox.fill('夹具专用检索词')
   await searchbox.press('Enter')
 
   const results = page.getByRole('list', { name: '搜索结果' })
@@ -29,13 +29,13 @@ test('中文查询命中预期文章并显示包含查询词的上下文摘要',
 
   const item = results
     .getByRole('listitem')
-    .filter({ hasText: '我为什么开始「一人交付笔记」' })
+    .filter({ hasText: '测试夹具：一人交付笔记开篇' })
   await expect(item).toBeVisible()
   await expect(item.getByRole('link')).toHaveAttribute(
     'href',
     '/posts/fixture-manifesto',
   )
-  await expect(item).toContainText('分布式系统')
+  await expect(item).toContainText('夹具专用检索词')
   await expect(item.locator('mark').first()).toBeVisible()
   await expect(page.getByText(/找到 1 篇相关文章/)).toBeVisible()
 })

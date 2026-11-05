@@ -47,7 +47,7 @@ const postPaths = [
   '/posts/fixture-tag-older',
 ]
 
-const tagNames = ['AI Agent', '一人交付', '专题测试', '个人品牌', '测试标签']
+const tagNames = ['AI Agent', '一人交付', '专题测试', '个人品牌', '测试标签', '夹具关联', '夹具标签']
 
 const publicPages = [
   { path: '/', type: 'website' },
@@ -76,7 +76,7 @@ test('文章页输出唯一且字段完整的 BlogPosting JSON-LD', async ({ pag
 
   const node = posting[0]!
   expect(node['@context']).toBe('https://schema.org')
-  expect(node.headline).toBe('我为什么开始「一人交付笔记」')
+  expect(node.headline).toBe('测试夹具：一人交付笔记开篇')
   expect(node.description).toBe(
     '从十一年后端与数据分析经验出发，说明「一人交付笔记」要记录什么，以及为什么要公开这些交付过程。',
   )
@@ -209,7 +209,7 @@ test('同一页面没有重复 JSON-LD 或冲突 canonical，Person 只出现一
 test('客户端导航后不残留上一页的 canonical 或 JSON-LD', async ({ page }) => {
   await page.goto('/')
   await page
-    .getByRole('link', { name: /我为什么开始「一人交付笔记」/ })
+    .getByRole('link', { name: /测试夹具：一人交付笔记开篇/ })
     .first()
     .click()
   await page.waitForURL(`**${articlePath}`)
@@ -252,7 +252,7 @@ test.describe('禁用 JavaScript', () => {
     expect(response?.status()).toBe(200)
 
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(
-      '我为什么开始「一人交付笔记」',
+      '测试夹具：一人交付笔记开篇',
     )
     await expect(page.getByText('作者：袁海粟')).toBeVisible()
 
@@ -390,6 +390,6 @@ test('文章页输出合法的 BreadcrumbList', async ({ page }) => {
 
   expect(items[0]!.name).toBe('首页')
   expect(items[0]!.item).toBe('https://yuanhaisu.com/')
-  expect(items.at(-1)!.name).toBe('我为什么开始「一人交付笔记」')
+  expect(items.at(-1)!.name).toBe('测试夹具：一人交付笔记开篇')
   expect(items.at(-1)!.item).toBe(articleUrl)
 })

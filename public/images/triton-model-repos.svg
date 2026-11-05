@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 420" role="img" aria-labelledby="title desc">
+  <title id="title">Triton 模型仓库与 CPU/GPU 双版本</title>
+  <desc id="desc">5 个模型仓库接入 Triton Inference Server，检测与识别走 ONNX Runtime backend，前后处理走 Python backend；对外由 Flask + waitress 提供服务，并支持 CPU/GPU 双版本。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .blue { fill: #eff6ff; stroke: #2563eb; }
+      .green { fill: #ecfdf5; stroke: #059669; }
+      .amber { fill: #fffbeb; stroke: #d97706; }
+      .title { font: 600 20px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .label { font: 600 14px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .small { font: 12px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #475569; }
+      .arrow { stroke: #64748b; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect class="bg" width="960" height="420"/>
+  <text class="title" x="480" y="38" text-anchor="middle">Triton 模型仓库：5 个仓库 + CPU/GPU 双版本</text>
+
+  <rect class="blue" x="50" y="130" width="250" height="150" rx="14"/>
+  <text class="label" x="175" y="166" text-anchor="middle">Triton Inference Server</text>
+  <text class="small" x="175" y="192" text-anchor="middle">ONNX Runtime backend</text>
+  <text class="small" x="175" y="214" text-anchor="middle">Python backend</text>
+  <text class="small" x="175" y="236" text-anchor="middle">warmup · 批处理 · 模型仓库</text>
+  <text class="small" x="175" y="258" text-anchor="middle">max_batch_size 最高 1000</text>
+
+  <rect class="box" x="390" y="55" width="250" height="46" rx="9"/>
+  <text class="label" x="515" y="84" text-anchor="middle">检测（YOLOv5）</text>
+  <rect class="box" x="390" y="115" width="250" height="46" rx="9"/>
+  <text class="label" x="515" y="144" text-anchor="middle">识别 det（PaddleOCR）</text>
+  <rect class="box" x="390" y="175" width="250" height="46" rx="9"/>
+  <text class="label" x="515" y="204" text-anchor="middle">识别 rec（PaddleOCR）</text>
+  <rect class="box" x="390" y="235" width="250" height="46" rx="9"/>
+  <text class="label" x="515" y="264" text-anchor="middle">预处理（Python backend）</text>
+  <rect class="box" x="390" y="295" width="250" height="46" rx="9"/>
+  <text class="label" x="515" y="324" text-anchor="middle">后处理（Python backend）</text>
+
+  <path class="arrow" d="M 386 78 L 304 150"/>
+  <path class="arrow" d="M 386 138 L 304 172"/>
+  <path class="arrow" d="M 386 198 L 304 198"/>
+  <path class="arrow" d="M 386 258 L 304 222"/>
+  <path class="arrow" d="M 386 318 L 304 248"/>
+
+  <rect class="green" x="710" y="80" width="200" height="70" rx="10"/>
+  <text class="label" x="810" y="108" text-anchor="middle">Flask + waitress</text>
+  <text class="small" x="810" y="130" text-anchor="middle">对外 HTTP 接口</text>
+
+  <rect class="green" x="710" y="180" width="200" height="70" rx="10"/>
+  <text class="label" x="810" y="208" text-anchor="middle">Kubernetes</text>
+  <text class="small" x="810" y="230" text-anchor="middle">Deployment / Service</text>
+
+  <rect class="amber" x="710" y="280" width="200" height="70" rx="10"/>
+  <text class="label" x="810" y="308" text-anchor="middle">CPU / GPU 双版本</text>
+  <text class="small" x="810" y="330" text-anchor="middle">CPU 约 7–10 req/s</text>
+
+  <path class="arrow" d="M 304 205 L 706 115"/>
+  <path class="arrow" d="M 304 215 L 706 215"/>
+  <path class="arrow" d="M 304 225 L 706 315"/>
+
+  <text class="small" x="480" y="398" text-anchor="middle">吞吐数字随请求内容大小浮动；上线前必须写清测试条件</text>
+</svg>

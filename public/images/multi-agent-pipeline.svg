@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 480" role="img" aria-labelledby="title desc">
+  <title id="title">多 agent 交付流水线</title>
+  <desc id="desc">主会话只做编排，多个 slice-worker 实现切片，全新上下文的 slice-supervisor 做对抗评审与真机验证，检查点、validator、密钥扫描和 PROGRESS.md 留存证据。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .accent { fill: #eff6ff; stroke: #2563eb; }
+      .green { fill: #ecfdf5; stroke: #059669; }
+      .amber { fill: #fffbeb; stroke: #d97706; }
+      .title { font: 600 20px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .label { font: 600 14px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .small { font: 12px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #475569; }
+      .arrow { stroke: #64748b; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect class="bg" width="960" height="480"/>
+  <text class="title" x="480" y="38" text-anchor="middle">多 agent 交付流水线</text>
+
+  <rect class="accent" x="300" y="70" width="360" height="70" rx="12"/>
+  <text class="label" x="480" y="98" text-anchor="middle">主会话：只做编排</text>
+  <text class="small" x="480" y="120" text-anchor="middle">不读源码；只读计划与 verdict</text>
+
+  <rect class="box" x="50" y="200" width="170" height="70" rx="10"/>
+  <text class="label" x="135" y="228" text-anchor="middle">slice-worker #1</text>
+  <text class="small" x="135" y="250" text-anchor="middle">实现 + 自测</text>
+
+  <rect class="box" x="250" y="200" width="170" height="70" rx="10"/>
+  <text class="label" x="335" y="228" text-anchor="middle">slice-worker #2</text>
+  <text class="small" x="335" y="250" text-anchor="middle">实现 + 自测</text>
+
+  <rect class="box" x="450" y="200" width="170" height="70" rx="10"/>
+  <text class="label" x="535" y="228" text-anchor="middle">slice-worker #N</text>
+  <text class="small" x="535" y="250" text-anchor="middle">一个切片 = 可回滚单元</text>
+
+  <path class="arrow" d="M 360 144 L 150 196"/>
+  <path class="arrow" d="M 440 144 L 335 196"/>
+  <path class="arrow" d="M 520 144 L 535 196"/>
+
+  <rect class="green" x="690" y="200" width="220" height="70" rx="10"/>
+  <text class="label" x="800" y="228" text-anchor="middle">slice-supervisor</text>
+  <text class="small" x="800" y="250" text-anchor="middle">全新上下文 · 对抗评审</text>
+
+  <path class="arrow" d="M 220 235 L 686 235"/>
+  <path class="arrow" d="M 420 235 L 686 235"/>
+  <path class="arrow" d="M 620 235 L 686 235"/>
+
+  <rect class="amber" x="180" y="330" width="600" height="70" rx="12"/>
+  <text class="label" x="480" y="358" text-anchor="middle">四检查点 · validator · 密钥扫描</text>
+  <text class="small" x="480" y="382" text-anchor="middle">状态落 PROGRESS.md；没有证据，不算完成</text>
+
+  <path class="arrow" d="M 800 274 L 800 300 L 480 300 L 480 326"/>
+  <path class="arrow" d="M 480 326 L 480 300 L 480 144" stroke-dasharray="5 4"/>
+  <text class="small" x="500" y="292" text-anchor="start">verdict 回到编排</text>
+</svg>

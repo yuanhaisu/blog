@@ -32,11 +32,11 @@ CI 工作流 `.github/workflows/ci.yml` 在 Pull Request、推送到 `main` / `f
 
 | 检查 | 命令 | 当前结果 | 覆盖内容 |
 | --- | --- | --- | --- |
-| 内容护栏 | `npm run validate:content` | 通过：7 篇测试夹具，1 篇草稿 | frontmatter schema、草稿隔离、正文内链目标、敏感字符串 |
+| 内容护栏 | `npm run validate:content` | 通过：3 篇正式 + 7 篇测试夹具，1 篇草稿 | frontmatter schema、草稿隔离、正文内链目标、敏感字符串 |
 | 密钥扫描 | `npm run check:secrets` | 通过 | 只扫描 Git 跟踪文件；只输出路径与模式名，不输出匹配值 |
-| 静态构建（测试夹具） | `npm run build:test` | 通过 | 先 stage 测试夹具，再 `nuxt generate` + Pagefind 中文索引 |
-| 产物验收 | `npm run validate:artifacts` | 通过：10 组检查，19 条公开路由，7 篇测试夹具 | 必需文件、路由清单、JSON-LD、canonical/OG/Twitter、无 JS 正文、sitemap、RSS、robots、llms.txt、`_headers`、Pagefind、草稿隔离 |
-| 站内链接 | `npm run check:links` | 通过：5 组检查，19 个 HTML 页面，554 个站内链接 | 所有公开路由 200、站内 href/src 200、未知路由 404、草稿路由 404、`www` 301（本地模拟） |
+| 静态构建（测试夹具） | `npm run build:test` | 通过：10 篇（3 正式 + 7 夹具） | 先 stage 测试夹具，再 `nuxt generate` + Pagefind 中文索引 |
+| 产物验收 | `npm run validate:artifacts` | 通过：10 组检查；生产构建 22 条路由、3 篇文章 | 必需文件、路由清单、JSON-LD、canonical/OG/Twitter、无 JS 正文、sitemap、RSS、robots、llms.txt、`_headers`、Pagefind、草稿隔离 |
+| 站内链接 | `npm run check:links` | 通过：5 组检查；生产构建 22 个 HTML 页面、635 个站内链接 | 所有公开路由 200、站内 href/src 200、未知路由 404、草稿路由 404、`www` 301（本地模拟） |
 | Playwright 全套 | `npm run test:e2e` | 通过（115 个测试） | 路由、404、无 JS、JSON-LD、SEO/GEO、RSS/sitemap/robots/llms、Pagefind 中文搜索、Giscus 主题与统计同意门控、图片懒加载、部署头、`www` 301 |
 | 部署冒烟 | `npm run smoke:deployment` | 通过（本地构建产物） | 200、HSTS、CSP、`www` 301 保留路径与查询 |
 
@@ -59,17 +59,17 @@ CI 工作流 `.github/workflows/ci.yml` 在 Pull Request、推送到 `main` / `f
 - 首页有一等精选文章区（`featured: true`，无文章时整段隐藏）与订阅入口（RSS + 公众号占位）。
 - `scripts/validate-artifacts.mjs` 已拆分为 `scripts/lib/artifacts/` 下的按产物模块；CSP 不再包含 Google Fonts 来源，字体全部自托管。
 
-## 2. 上线内容：待完成（内容工作，当前未写）
+## 2. 上线内容：3 篇博客初稿已写，2 篇平台稿待写
 
-以下 5 篇是 v1 上线门槛（见 `docs/plan.md` §5.1–5.2）。当前**一篇都未写**，因此不满足正式上线条件。详细提纲、互链、配图与平台改编方案见 [`docs/content-outlines.md`](content-outlines.md)。
+以下 5 篇是 v1 上线门槛（见 `docs/plan.md` §5.1–5.2）。3 篇博客已有初稿（待审阅/发布），2 篇平台稿尚未写，因此仍不满足正式上线条件。详细提纲、互链、配图与平台改编方案见 [`docs/content-outlines.md`](content-outlines.md)。
 
 ### 2.1 3 篇中文博客（PENDING）
 
 | # | 工作标题 | 状态 |
 | --- | --- | --- |
-| 1 | 《我为什么开始「一人交付笔记」》 | 未写 |
-| 2 | 《一人交付实验 #1：一个人 + 多 agent，2.5 个月交付 14 万行 SaaS》 | 未写 |
-| 3 | 《一人交付实验 #2：AI 工程落地的三层栈》 | 未写 |
+| 1 | 《我为什么开始「一人交付笔记」》 | 已写初稿，待审阅 |
+| 2 | 《一人交付实验 #1：一个人 + 多 agent，2.5 个月交付 14 万行 SaaS》 | 已写初稿，待审阅 |
+| 3 | 《一人交付实验 #2：AI 工程落地的三层栈》 | 已写初稿，待审阅 |
 
 ### 2.2 2 篇平台文章（PENDING）
 
@@ -94,17 +94,17 @@ tests/fixtures/content/series/test-series.md
 tests/fixtures/content/series/fixture-series.md
 ```
 
-它们只由 `npm run build:test` / `npm run validate:content` / CI 通过 `scripts/stage-content-fixtures.mjs` 复制到被忽略的 `content/` 路径；生产构建 `npm run build` 不包含它们。因此当前 `content/posts/` 与 `content/series/` 为空，生产站点有 **0 篇文章**，直到写入 3 篇首发博客。
+它们只由 `npm run build:test` / `npm run validate:content` / CI 通过 `scripts/stage-content-fixtures.mjs` 复制到被忽略的 `content/` 路径；生产构建 `npm run build` 不包含它们。生产内容现有 **3 篇正式文章初稿**（`why-i-started-one-person-delivery-notes`、`one-person-delivery-experiment-01-multi-agent-saas`、`one-person-delivery-experiment-02-ai-engineering-stack`）与真实专题 `one-person-delivery-experiment.md`。
 
 草稿隔离测试使用 `tests/fixtures/content/drafts/draft-example-not-published.md`，同样只在测试时 staged；仓库不跟踪任何真实草稿文件。
 
 ### 2.4 内容完成后的动作
 
-1. 把 3 篇博客写入 `content/posts/`，frontmatter 通过 `shared/content-schema.mjs`；上线文章加 `launch: true`，确保至少 3 个站内链接与 1 张站内原创配图（配图建议 WebP/AVIF，规则见 `README.md`「图片」）。
+1. 3 篇博客已写入 `content/posts/`，frontmatter 已通过 `shared/content-schema.mjs`，并已加 `launch: true`、至少 3 个站内链接与 1 张站内原创配图；下一步是审阅正文与配图。
 2. 如需专题页，在 `content/series/` 增加 ASCII slug 的专题文档（中文标题放 `title`）；中文文件名在 Nuxt Content 中可能无法正确生成路由。
 3. 平台文章发布后，拿到真实知乎/公众号 URL，再更新第 3 节的 `sameAs` 与 About 入口。
 4. 重新执行 `npm run ci`；测试构建会把夹具与正式文章一起纳入 sitemap、RSS、llms.txt 与 Pagefind；生产构建 `npm run build` 只包含正式文章。
-5. 测试夹具已在 `tests/fixtures/content/`，生产构建不包含，不需要删除。首发第 1 篇可以使用现在空出的 `why-i-started-one-person-delivery-notes` 作为 slug，或使用新的 slug；正文必须满足 `launch: true` 护栏（≥3 个站内链接 + 1 张站内原创配图）。
+5. 测试夹具已在 `tests/fixtures/content/`，生产构建不包含，不需要删除。第 1 篇已使用 `why-i-started-one-person-delivery-notes`，第 2/3 篇使用 `one-person-delivery-experiment-01-multi-agent-saas` 与 `one-person-delivery-experiment-02-ai-engineering-stack`；正文已满足 `launch: true` 护栏。
 
 ## 3. 外部账号步骤：阻塞（blocked for user）
 

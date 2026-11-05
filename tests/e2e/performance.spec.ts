@@ -129,7 +129,7 @@ test('字体未加载时正文仍可立即渲染', async ({ page }) => {
 
   const heading = page.getByRole('heading', {
     level: 1,
-    name: /我为什么开始/,
+    name: /测试夹具：一人交付笔记开篇/,
   })
   await expect(heading).toBeVisible({ timeout: 5_000 })
 

@@ -92,7 +92,7 @@ NUXT_PUBLIC_WECHAT_MP_URL=https://mp.weixin.qq.com/s/<article-or-profile>
 ## 内容、草稿与上线护栏
 
 - 真实草稿放在 `content/posts/drafts/`，该目录被 `.gitignore` 忽略，不会被提交。草稿仍会被内容护栏读取并验证 frontmatter，但不会进入路由、sitemap、RSS、llms.txt 或 Pagefind。
-- **所有测试夹具**（文章、专题、草稿）存放在 `tests/fixtures/content/`，由 `scripts/stage-content-fixtures.mjs` 在 `npm run build:test` / `npm run validate:content` / CI 前复制到被忽略的 `content/posts/`、`content/posts/drafts/`、`content/series/`；`npm run clean:fixtures` 会按 manifest 只删除 staged 文件，不会碰真实内容。生产构建 `npm run build` 不 stage 夹具，因此 `content/` 里当前为空，直到写入首发文章。
+- **所有测试夹具**（文章、专题、草稿）存放在 `tests/fixtures/content/`，由 `scripts/stage-content-fixtures.mjs` 在 `npm run build:test` / `npm run validate:content` / CI 前复制到被忽略的 `content/posts/`、`content/posts/drafts/`、`content/series/`；`npm run clean:fixtures` 会按 manifest 只删除 staged 文件，不会碰真实内容。生产构建 `npm run build` 不 stage 夹具；`content/` 里现在有 3 篇正式文章初稿。
 - 首发文章在 frontmatter 写 `launch: true`。内容护栏会要求至少 3 个不同的站内链接和至少 1 张站内原创配图，并允许链接到由已发布文章生成动态 `/tags/...`、`/series/...` 路由。测试夹具与未到发布阶段的文章不写该字段，因此不受约束。
 
 ## 图片
@@ -129,7 +129,7 @@ npm run check:secrets      # 检查仓库不含凭据与 .env
 
 ## 当前状态
 
-站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、文章/标签/专题/归档页、无 JavaScript 可读的正文与 Playwright 测试。仓库侧上线门禁（内容护栏、测试构建、JSON-LD/sitemap/RSS/robots/llms.txt、内链、Pagefind、HSTS/CSP、`www` 跳转声明、冒烟与密钥扫描）已通过；生产内容当前为 **0 篇**，7 篇测试夹具只在测试/CI 时 staged；3 篇首发文章与 2 篇平台稿尚未写，Cloudflare Pages 项目、DNS、真实统计/Giscus ID 与 `www` 跳转仍待账号侧完成，详见[上线验收清单](docs/launch-checklist.md)。
+站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、文章/标签/专题/归档页、无 JavaScript 可读的正文与 Playwright 测试。仓库侧上线门禁（内容护栏、测试构建、JSON-LD/sitemap/RSS/robots/llms.txt、内链、Pagefind、HSTS/CSP、`www` 跳转声明、冒烟与密钥扫描）已通过；生产内容已有 **3 篇正式文章初稿**，7 篇测试夹具只在测试/CI 时 staged；2 篇平台稿尚未写，Cloudflare Pages 项目、DNS、真实统计/Giscus ID 与 `www` 跳转仍待账号侧完成，详见[上线验收清单](docs/launch-checklist.md)。
 
 ## 关键约束
 

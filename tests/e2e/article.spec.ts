@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 
 const articlePath = '/posts/fixture-manifesto'
-const articleTitle = '我为什么开始「一人交付笔记」'
+const articleTitle = '测试夹具：一人交付笔记开篇'
 
 const fixturePath = '/posts/fixture-code-and-toc'
 const fixtureTitle = '测试夹具：目录、代码块与阅读体验'
@@ -43,8 +43,8 @@ test('文章页展示描述、更新日期、标签、专题与阅读时长', as
   await expect(page.getByText('作者：袁海粟')).toBeVisible()
 
   const tags = page.getByRole('navigation', { name: '文章标签' })
-  await expect(tags.getByRole('link', { name: '一人交付', exact: true })).toBeVisible()
-  await expect(tags.getByRole('link', { name: 'AI Agent', exact: true })).toBeVisible()
+  await expect(tags.getByRole('link', { name: '夹具关联', exact: true })).toBeVisible()
+  await expect(tags.getByRole('link', { name: '夹具标签', exact: true })).toBeVisible()
   await expect(
     page.getByRole('navigation', { name: '文章专题' }),
   ).toContainText('测试夹具专题')

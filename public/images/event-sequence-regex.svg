@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 360" role="img" aria-labelledby="title desc">
+  <title id="title">事件序列正则引擎</title>
+  <desc id="desc">事件流经过词法/语法分析、AST、后缀 IR、Thompson ε-NFA 构造与匹配，输出匹配结果；带 mustMatchPos 位置约束和四层回溯约束。</desc>
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#64748b"/>
+    </marker>
+    <style>
+      .bg { fill: #f8fafc; }
+      .box { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.5; }
+      .blue { fill: #eff6ff; stroke: #2563eb; }
+      .green { fill: #ecfdf5; stroke: #059669; }
+      .amber { fill: #fffbeb; stroke: #d97706; }
+      .title { font: 600 20px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .label { font: 600 13.5px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #0f172a; }
+      .small { font: 11.5px system-ui, -apple-system, 'Segoe UI', 'Noto Sans SC', sans-serif; fill: #475569; }
+      .arrow { stroke: #64748b; stroke-width: 1.6; fill: none; marker-end: url(#arrow); }
+    </style>
+  </defs>
+  <rect class="bg" width="960" height="360"/>
+  <text class="title" x="480" y="38" text-anchor="middle">事件序列正则引擎：从事件流到 NFA 匹配</text>
+
+  <rect class="blue" x="30" y="110" width="130" height="84" rx="10"/>
+  <text class="label" x="95" y="146" text-anchor="middle">事件流</text>
+  <text class="small" x="95" y="168" text-anchor="middle">按时间到达</text>
+
+  <rect class="box" x="185" y="110" width="130" height="84" rx="10"/>
+  <text class="label" x="250" y="146" text-anchor="middle">词法 / 语法</text>
+  <text class="small" x="250" y="168" text-anchor="middle">解析表达式</text>
+
+  <rect class="box" x="340" y="110" width="130" height="84" rx="10"/>
+  <text class="label" x="405" y="146" text-anchor="middle">AST</text>
+  <text class="small" x="405" y="168" text-anchor="middle">并 / 连接 / 分组</text>
+
+  <rect class="box" x="495" y="110" width="130" height="84" rx="10"/>
+  <text class="label" x="560" y="146" text-anchor="middle">后缀 IR</text>
+  <text class="small" x="560" y="168" text-anchor="middle">有界重复 / 无序组</text>
+
+  <rect class="green" x="650" y="110" width="130" height="84" rx="10"/>
+  <text class="label" x="715" y="146" text-anchor="middle">Thompson ε-NFA</text>
+  <text class="small" x="715" y="168" text-anchor="middle">构造 + 匹配</text>
+
+  <rect class="amber" x="805" y="110" width="125" height="84" rx="10"/>
+  <text class="label" x="867" y="146" text-anchor="middle">匹配结果</text>
+  <text class="small" x="867" y="168" text-anchor="middle">命中 / 未命中</text>
+
+  <path class="arrow" d="M 164 152 L 181 152"/>
+  <path class="arrow" d="M 319 152 L 336 152"/>
+  <path class="arrow" d="M 474 152 L 491 152"/>
+  <path class="arrow" d="M 629 152 L 646 152"/>
+  <path class="arrow" d="M 784 152 L 801 152"/>
+
+  <rect class="box" x="60" y="240" width="840" height="86" rx="12" stroke-dasharray="5 4"/>
+  <text class="label" x="480" y="270" text-anchor="middle">约束与正确性</text>
+  <text class="small" x="480" y="294" text-anchor="middle">字符集 · 长度 100 · 编译规模 3000 · 无序单元 5：四层约束规避灾难性回溯</text>
+  <text class="small" x="480" y="314" text-anchor="middle">mustMatchPos 位置约束 + 反向匹配：刚到达的事件必须参与；核心 pass 均有单元测试</text>
+</svg>

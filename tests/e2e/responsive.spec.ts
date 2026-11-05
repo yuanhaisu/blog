@@ -12,7 +12,7 @@ const routes = [
   { path: '/about', heading: /袁海粟/ },
   {
     path: '/posts/fixture-manifesto',
-    heading: /我为什么开始/,
+    heading: /测试夹具：一人交付笔记开篇/,
   },
   {
     path: '/posts/fixture-code-and-toc',
