@@ -4,7 +4,7 @@
 
 **Blocked by:** 03
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] 构建时生成搜索索引。
 - [ ] 站点头部有搜索入口，搜索无需服务器。
@@ -12,3 +12,7 @@
 - [ ] 空查询/未知查询有可用的空状态。
 - [ ] 草稿、404、隐私页不被索引。
 - [ ] Playwright 覆盖中文查询；若 Pagefind 不通过，FlexSearch 方案通过同一测试。
+
+## Resolution
+
+Implemented and merged into `feat/blog-v1` (final integration commit `f16132c`). Gate suite passes: content validation, secret scan, static build, artifact validation, internal link check, 115 Playwright tests, deployment smoke.

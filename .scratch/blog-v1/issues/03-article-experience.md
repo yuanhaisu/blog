@@ -4,7 +4,7 @@
 
 **Blocked by:** 01, 02
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] 文章页展示标题、描述、发布日期、更新日期（如有）、作者、标签、专题（如有）、阅读时长。
 - [ ] 目录列出 h2/h3 标题，锚点链接可用。
@@ -13,3 +13,7 @@
 - [ ] 页脚展示 CC BY 4.0 与相关文章。
 - [ ] 禁用 JavaScript 后目录链接与正文仍可用。
 - [ ] Playwright 在构建产物上断言以上行为。
+
+## Resolution
+
+Implemented and merged into `feat/blog-v1` (final integration commit `f16132c`). Gate suite passes: content validation, secret scan, static build, artifact validation, internal link check, 115 Playwright tests, deployment smoke.

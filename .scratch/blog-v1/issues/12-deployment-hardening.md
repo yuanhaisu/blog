@@ -4,7 +4,7 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] `www.yuanhaisu.com` 301 到 `https://yuanhaisu.com`。
 - [ ] 强制 HTTPS，响应包含 HSTS。
@@ -12,3 +12,7 @@
 - [ ] Cloudflare Pages 预览通过 HTTPS 访问。
 - [ ] 部署冒烟检查 200、301、HSTS/CSP 响应头。
 - [ ] 构建日志与仓库不含密钥。
+
+## Resolution
+
+Implemented and merged into `feat/blog-v1` (final integration commit `f16132c`). Gate suite passes: content validation, secret scan, static build, artifact validation, internal link check, 115 Playwright tests, deployment smoke.

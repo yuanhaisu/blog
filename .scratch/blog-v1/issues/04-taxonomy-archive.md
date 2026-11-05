@@ -4,7 +4,7 @@
 
 **Blocked by:** 01, 02
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] 标签页列出该标签下所有已发布文章，按日期倒序。
 - [ ] 专题页按 `order` 排序文章，并展示专题说明（如有）。
@@ -13,3 +13,7 @@
 - [ ] 草稿不出现在任何分类或归档页。
 - [ ] 未知标签/专题返回 404。
 - [ ] Playwright 覆盖标签页、专题页、归档页。
+
+## Resolution
+
+Implemented and merged into `feat/blog-v1` (final integration commit `f16132c`). Gate suite passes: content validation, secret scan, static build, artifact validation, internal link check, 115 Playwright tests, deployment smoke.

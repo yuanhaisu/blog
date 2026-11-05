@@ -4,7 +4,7 @@
 
 **Blocked by:** 01, 02
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] About 页包含 `袁海粟（Yuan Haisu）`、身份主张、经历摘要、代表项目、技能、公开邮箱、GitHub/知乎/公众号链接。
 - [ ] Person JSON-LD 包含 name、alternateName、url、image、jobTitle、description、knowsAbout、sameAs。
@@ -12,3 +12,7 @@
 - [ ] 全站输出中不出现「袁海苏」等错误变体。
 - [ ] 不出现手机号、客户名称、儿童信息。
 - [ ] Playwright 与 JSON-LD 校验通过。
+
+## Resolution
+
+Implemented and merged into `feat/blog-v1` (final integration commit `f16132c`). Gate suite passes: content validation, secret scan, static build, artifact validation, internal link check, 115 Playwright tests, deployment smoke.
