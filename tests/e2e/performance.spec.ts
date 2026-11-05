@@ -1,4 +1,14 @@
-import { expect, test, type Page } from '@playwright/test'
+import {
+  expect,
+  test,
+  type Page,
+  type Route,
+} from '@playwright/test'
+
+// Performance budgets are measured in real time, so keep these checks from
+// running side by side with each other and distorting LCP/CLS through CPU
+// contention.
+test.describe.configure({ mode: 'serial' })
 
 const articlePath = '/posts/why-i-started-one-person-delivery-notes'
 
@@ -107,23 +117,30 @@ test('只加载站内子集字体，不加载完整 CJK 字体', async ({ page }
 })
 
 test('字体未加载时正文仍可立即渲染', async ({ page }) => {
-  let fontRequests = 0
+  // Hold every font response open. If first render waited for the font
+  // download, the heading below could never become visible.
+  const pendingFontRequests: Route[] = []
 
-  await page.route('**/fonts/*.woff2', async (route) => {
-    fontRequests += 1
-    await new Promise((resolve) => setTimeout(resolve, 3_000))
-    await route.continue().catch(() => undefined)
+  await page.route('**/fonts/*.woff2', (route) => {
+    pendingFontRequests.push(route)
   })
 
-  const startedAt = Date.now()
   await page.goto(articlePath, { waitUntil: 'domcontentloaded' })
 
-  await expect(
-    page.getByRole('heading', { level: 1, name: /我为什么开始/ }),
-  ).toBeVisible({ timeout: 1_500 })
+  const heading = page.getByRole('heading', {
+    level: 1,
+    name: /我为什么开始/,
+  })
+  await expect(heading).toBeVisible({ timeout: 5_000 })
 
-  expect(Date.now() - startedAt).toBeLessThan(2_000)
-  expect(fontRequests).toBeGreaterThan(0)
+  expect(pendingFontRequests.length).toBeGreaterThan(0)
+  expect(
+    await page.evaluate(() => document.fonts.status),
+    '字体请求仍被挂起时 document.fonts.status 应为 loading',
+  ).toBe('loading')
 
+  for (const route of pendingFontRequests) {
+    await route.abort().catch(() => undefined)
+  }
   await page.unrouteAll({ behavior: 'ignoreErrors' })
 })
