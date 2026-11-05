@@ -197,5 +197,7 @@ useHead({
         </ul>
       </nav>
     </footer>
+
+    <PostComments />
   </article>
 </template>
