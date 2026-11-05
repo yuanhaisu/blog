@@ -19,13 +19,16 @@
 ## 本地验证
 
 ```bash
+npm run ci                   # 内容、密钥、构建、产物、内链、Playwright、部署冒烟
 npm run build                # 生成 .output/public
 npm test                     # Playwright：页面、无 JS、部署头与 www 301
+npm run validate:artifacts   # JSON-LD、sitemap、RSS、robots、llms.txt、Pagefind
+npm run check:links          # 公开路由 200、未知路由 404、www 301
 npm run smoke:deployment     # 部署冒烟（本地构建产物）
 npm run check:secrets        # 仓库密钥扫描
 ```
 
-本地冒烟通过只代表仓库侧配置正确。DNS、证书、Always Use HTTPS 与 `www` 跳转必须由 Cloudflare 账号完成。
+本地冒烟通过只代表仓库侧配置正确。DNS、证书、Always Use HTTPS 与 `www` 跳转必须由 Cloudflare 账号完成。完整的仓库侧/内容/账号侧状态见[上线验收清单](launch-checklist.md)。
 
 ## Cloudflare 账号侧配置（blocked for user）
 
