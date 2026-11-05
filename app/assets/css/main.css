@@ -80,6 +80,72 @@ button:focus-visible {
   margin: 0;
 }
 
+.site-header-meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.25rem;
+}
+
+.site-nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.site-nav a {
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.about-header {
+  padding-bottom: 1.75rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.about-identity {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+.about-avatar {
+  width: 7.5rem;
+  height: 7.5rem;
+  border: 1px solid var(--rule);
+  border-radius: 50%;
+  background: var(--surface);
+  object-fit: cover;
+}
+
+.about-header h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+}
+
+.about-lede {
+  margin: 1rem 0 0;
+  color: var(--muted);
+  max-width: 34rem;
+}
+
+.profile-list {
+  list-style: none;
+  padding-left: 0;
+}
+
+.profile-list li {
+  padding: 0.35rem 0;
+  border-bottom: 1px dotted var(--rule);
+}
+
+.profile-list li:last-child {
+  border-bottom: 0;
+}
+
 .site-main {
   flex: 1;
   padding: 3rem 0 4rem;
@@ -211,30 +277,6 @@ button:focus-visible {
   font-size: 1.05rem;
 }
 
-.post-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem 0.5rem;
-  margin: 1rem 0 0;
-  padding: 0;
-  list-style: none;
-}
-
-.post-tags li {
-  padding: 0.1rem 0.55rem;
-  border: 1px solid var(--rule);
-  border-radius: 999px;
-  background: var(--surface);
-  color: var(--muted);
-  font-size: 0.78rem;
-}
-
-.post-series {
-  margin: 0.75rem 0 0;
-  color: var(--accent);
-  font-size: 0.85rem;
-}
-
 .post-toc {
   margin-top: 2rem;
   padding: 1.1rem 1.35rem;
@@ -269,6 +311,81 @@ button:focus-visible {
   font-family: var(--font-serif);
   font-size: 1.05rem;
   line-height: 1.9;
+}
+
+.taxonomy-header {
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--rule);
+}
+
+.taxonomy-header h1 {
+  margin: 0;
+  font-family: var(--font-serif);
+  font-size: clamp(2rem, 6vw, 3rem);
+  line-height: 1.2;
+}
+
+.taxonomy-count,
+.taxonomy-description {
+  margin: 0.75rem 0 0;
+  color: var(--muted);
+}
+
+.taxonomy .post-list {
+  margin-top: 1.75rem;
+}
+
+.post-taxonomy {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-top: 1.25rem;
+  font-size: 0.9rem;
+}
+
+.post-taxonomy-label {
+  color: var(--muted);
+}
+
+.tag-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.tag-list a {
+  display: inline-block;
+  padding: 0.1rem 0.6rem;
+  border: 1px solid var(--rule);
+  border-radius: 999px;
+  background: var(--surface);
+  font-size: 0.85rem;
+  text-decoration: none;
+}
+
+.archive-year {
+  margin-top: 2.5rem;
+}
+
+.archive-year h2 {
+  margin: 0 0 1rem;
+  font-family: var(--font-serif);
+  font-size: 1.4rem;
+}
+
+.archive-month {
+  margin-top: 1.75rem;
+}
+
+.archive-month h3 {
+  margin: 0 0 0.75rem;
+  color: var(--muted);
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
 }
 
 .post-body :where(h2, h3) {

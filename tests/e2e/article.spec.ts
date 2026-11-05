@@ -41,13 +41,13 @@ test('文章页展示描述、更新日期、标签、专题与阅读时长', as
     '更新于',
   )
   await expect(page.getByText('作者：袁海粟')).toBeVisible()
+
+  const tags = page.getByRole('navigation', { name: '文章标签' })
+  await expect(tags.getByRole('link', { name: '一人交付', exact: true })).toBeVisible()
+  await expect(tags.getByRole('link', { name: 'AI Agent', exact: true })).toBeVisible()
   await expect(
-    page.getByRole('list', { name: '文章标签' }).getByText('一人交付'),
-  ).toBeVisible()
-  await expect(
-    page.getByRole('list', { name: '文章标签' }).getByText('AI Agent'),
-  ).toBeVisible()
-  await expect(page.getByText('专题：一人交付实验')).toBeVisible()
+    page.getByRole('navigation', { name: '文章专题' }),
+  ).toContainText('一人交付实验')
   await expect(page.getByText(/阅读约 \d+ 分钟/)).toBeVisible()
 })
 

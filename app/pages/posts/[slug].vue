@@ -80,6 +80,15 @@ const relatedPosts = computed(() => {
     .map(({ entry }) => entry)
 })
 
+const seriesSlug = post.value.series
+const { data: seriesMeta } = await useAsyncData(
+  `post-series:${seriesSlug ?? ''}`,
+  () =>
+    seriesSlug
+      ? queryCollection('series').path(`/series/${seriesSlug}`).first()
+      : Promise.resolve(null),
+)
+
 const canonicalUrl = `${SITE.url}${route.path}`
 
 useHead({
@@ -102,11 +111,27 @@ useHead({
         <span>阅读约 {{ readingMinutes }} 分钟</span>
       </p>
       <p class="post-deck">{{ post.description }}</p>
-      <ul v-if="post.tags?.length" class="post-tags" aria-label="文章标签">
-        <li v-for="tag in post.tags" :key="tag">{{ tag }}</li>
-      </ul>
-      <p v-if="post.series" class="post-series">专题：{{ post.series }}</p>
     </header>
+
+    <nav v-if="post.series" class="post-taxonomy" aria-label="文章专题">
+      <span class="post-taxonomy-label">专题：</span>
+      <NuxtLink
+        v-if="seriesMeta"
+        :to="`/series/${encodeURIComponent(post.series)}`"
+      >
+        {{ seriesMeta.title ?? post.series }}
+      </NuxtLink>
+      <span v-else>{{ post.series }}</span>
+    </nav>
+
+    <nav v-if="post.tags?.length" class="post-taxonomy" aria-label="文章标签">
+      <span class="post-taxonomy-label">标签：</span>
+      <ul class="tag-list">
+        <li v-for="tag in post.tags" :key="tag">
+          <NuxtLink :to="`/tags/${encodeURIComponent(tag)}`">{{ tag }}</NuxtLink>
+        </li>
+      </ul>
+    </nav>
 
     <nav v-if="tocLinks.length" class="post-toc" aria-labelledby="toc-heading">
       <h2 id="toc-heading">目录</h2>
