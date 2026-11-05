@@ -13,6 +13,15 @@ if (!post.value) {
   })
 }
 
+const seriesSlug = post.value.series
+const { data: seriesMeta } = await useAsyncData(
+  `post-series:${seriesSlug ?? ''}`,
+  () =>
+    seriesSlug
+      ? queryCollection('series').path(`/series/${seriesSlug}`).first()
+      : Promise.resolve(null),
+)
+
 const canonicalUrl = `${SITE.url}${route.path}`
 
 useHead({
@@ -32,6 +41,22 @@ useHead({
       </p>
       <p class="post-deck">{{ post.description }}</p>
     </header>
+
+    <nav v-if="post.series" class="post-taxonomy" aria-label="文章专题">
+      <span class="post-taxonomy-label">专题：</span>
+      <NuxtLink :to="`/series/${encodeURIComponent(post.series)}`">
+        {{ seriesMeta?.title ?? post.series }}
+      </NuxtLink>
+    </nav>
+
+    <nav v-if="post.tags?.length" class="post-taxonomy" aria-label="文章标签">
+      <span class="post-taxonomy-label">标签：</span>
+      <ul class="tag-list">
+        <li v-for="tag in post.tags" :key="tag">
+          <NuxtLink :to="`/tags/${encodeURIComponent(tag)}`">{{ tag }}</NuxtLink>
+        </li>
+      </ul>
+    </nav>
 
     <div class="post-body">
       <ContentRenderer :value="post" />
