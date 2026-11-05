@@ -1,0 +1,40 @@
+{
+  "name": "yuanhaisu-blog",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "nuxt dev",
+    "dev:fixtures": "node scripts/stage-content-fixtures.mjs && nuxt dev",
+    "build": "nuxt generate && npm run search:index",
+    "build:test": "node scripts/stage-content-fixtures.mjs && npm run build",
+    "generate": "npm run build",
+    "search:index": "node scripts/build-search-index.mjs",
+    "preview": "nuxt preview",
+    "stage:fixtures": "node scripts/stage-content-fixtures.mjs",
+    "clean:fixtures": "node scripts/stage-content-fixtures.mjs --clean",
+    "validate:content": "node scripts/stage-content-fixtures.mjs && node scripts/validate-content.mjs",
+    "validate:artifacts": "node scripts/validate-artifacts.mjs",
+    "check:links": "node scripts/check-internal-links.mjs",
+    "fonts:subset": "node scripts/subset-fonts.mjs",
+    "test": "playwright test",
+    "test:e2e": "playwright test",
+    "smoke:deployment": "node scripts/deployment-smoke.mjs",
+    "check:secrets": "node scripts/check-no-secrets.mjs",
+    "ci": "npm run validate:content && npm run check:secrets && npm run build:test && npm run validate:artifacts && npm run check:links && npm run test:e2e && npm run smoke:deployment && npm run clean:fixtures"
+  },
+  "dependencies": {
+    "@nuxt/content": "~3.16.2",
+    "better-sqlite3": "^13.0.3",
+    "js-yaml": "^4.3.2",
+    "nuxt": "~4.6.4"
+  },
+  "devDependencies": {
+    "@playwright/test": "~1.64.1",
+    "axe-core": "^4.14.0",
+    "pagefind": "^1.6.0"
+  },
+  "engines": {
+    "node": "^22.22.3 || ^24.15.0 || >=26.0.0"
+  }
+}

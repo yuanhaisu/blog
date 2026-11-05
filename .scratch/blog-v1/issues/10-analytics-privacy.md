@@ -4,7 +4,7 @@
 
 **Blocked by:** 01
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] 所有公开页面加载 Cloudflare Web Analytics 配置。
 - [ ] 所有公开页面加载百度统计配置。
@@ -12,3 +12,7 @@
 - [ ] 若百度统计使用 Cookie，隐私页明确说明；Cloudflare Web Analytics 不使用 Cookie。
 - [ ] 统计脚本不阻塞正文渲染。
 - [ ] 测试断言配置存在与隐私页内容。
+
+## Resolution
+
+Implemented and merged into `feat/blog-v1` (final integration commit `f16132c`). Gate suite passes: content validation, secret scan, static build, artifact validation, internal link check, 115 Playwright tests, deployment smoke.

@@ -3,6 +3,7 @@ node_modules/
 .output/
 .nitro/
 .cache/
+.data/
 dist/
 coverage/
 playwright-report/
@@ -16,3 +17,8 @@ test-results/
 .DS_Store
 Thumbs.db
 *.log
+content/posts/drafts/
+content/posts/fixture-*.md
+content/series/test-series.md
+content/series/fixture-*.md
+.fixtures-staged.json

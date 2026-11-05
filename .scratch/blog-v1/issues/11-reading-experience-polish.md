@@ -4,7 +4,7 @@
 
 **Blocked by:** 03, 04
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] 明暗模式切换可持久化，并尊重 `prefers-color-scheme`。
 - [ ] 360px、768px、1440px 下无横向滚动，布局可用。
@@ -14,3 +14,7 @@
 - [ ] 文字对比度达到 WCAG AA；图片有 alt。
 - [ ] 代表性文章 LCP < 2.5s、CLS < 0.1（本地或预览测量）。
 - [ ] Playwright 覆盖响应式、明暗模式、404；Lighthouse 或等价工具覆盖性能与无障碍。
+
+## Resolution
+
+Implemented and merged into `feat/blog-v1` (final integration commit `f16132c`). Gate suite passes: content validation, secret scan, static build, artifact validation, internal link check, 115 Playwright tests, deployment smoke.

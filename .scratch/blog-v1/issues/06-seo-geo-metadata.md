@@ -4,7 +4,7 @@
 
 **Blocked by:** 03, 05
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] 文章页输出 BlogPosting：headline、description、datePublished、dateModified、author/publisher 指向 Person `@id`、mainEntityOfPage、image、inLanguage、license。
 - [ ] 文章页输出合法的 BreadcrumbList。
@@ -13,3 +13,7 @@
 - [ ] 日期为 ISO 8601；中文页面 `inLanguage` 为 `zh-CN`。
 - [ ] JSON-LD 可解析并通过 schema 校验；无 JS 正文测试通过。
 - [ ] 同一页面没有冲突的 canonical 或重复 JSON-LD。
+
+## Resolution
+
+Implemented and merged into `feat/blog-v1` (final integration commit `f16132c`). Gate suite passes: content validation, secret scan, static build, artifact validation, internal link check, 115 Playwright tests, deployment smoke.

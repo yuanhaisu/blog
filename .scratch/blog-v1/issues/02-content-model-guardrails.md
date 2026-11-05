@@ -4,7 +4,7 @@
 
 **Blocked by:** 01 (走通骨架：可构建、可预览的首页 + 一篇文章)
 
-**Status:** ready-for-agent
+**Status:** resolved
 
 - [ ] 必填字段（title、description、date、tags、draft、lang、license）缺失或类型错误时，构建失败并给出清晰错误。
 - [ ] `draft: true` 的文章不出现在生产构建、标签/专题/归档与发现类产物中。
@@ -12,3 +12,7 @@
 - [ ] 敏感字符串（手机号、客户名称、儿童信息、内部域名、密钥模式）命中时，构建失败。
 - [ ] 构建错误指出文章与字段，但不打印敏感值。
 - [ ] 合法 fixture 正常构建；每种失败模式都有对应 fixture。
+
+## Resolution
+
+Implemented and merged into `feat/blog-v1` (final integration commit `f16132c`). Gate suite passes: content validation, secret scan, static build, artifact validation, internal link check, 115 Playwright tests, deployment smoke.
