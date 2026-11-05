@@ -12,6 +12,13 @@ const portOffset =
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 43000 + portOffset)
 const baseURL = `http://127.0.0.1:${port}`
 
+// The Playwright browser CDN is unreachable from the local Windows machine,
+// so local runs drive the installed Microsoft Edge. GitHub Actions installs
+// the bundled Chromium and must not set a channel.
+const channel =
+  process.env.PLAYWRIGHT_CHANNEL ??
+  (process.env.CI ? undefined : 'msedge')
+
 export default defineConfig({
   testDir: './tests',
   fullyParallel: true,
@@ -29,9 +36,7 @@ export default defineConfig({
   use: {
     baseURL,
     trace: 'on-first-retry',
-    // The Playwright browser CDN is unreachable from this machine, so the
-    // smoke test drives the locally installed Microsoft Edge instead.
-    channel: 'msedge',
+    ...(channel ? { channel } : {}),
   },
   webServer: {
     command: 'node tests/static-server.mjs .output/public',

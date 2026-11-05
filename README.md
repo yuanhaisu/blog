@@ -14,6 +14,7 @@ GitHub 内容源 → Cloudflare Pages → `yuanhaisu.com`；中文 canonical；�
 ## 文档
 
 - [实施总案](docs/plan.md)
+- [上线验收清单](docs/launch-checklist.md)
 - [术语表](GLOSSARY.md)
 - Agent 配置：[issue tracker](docs/agents/issue-tracker.md) · [triage labels](docs/agents/triage-labels.md) · [domain docs](docs/agents/domain.md)
 - ADR
@@ -35,9 +36,10 @@ npm run dev       # 本地开发服务器
 npm run build     # 静态生成，产物写入 .output/public
 npm run preview   # 预览静态产物
 npm run test:e2e  # 对 .output/public 运行 Playwright 冒烟测试
+npm run ci        # 内容护栏、密钥扫描、构建、产物、内链、Playwright、部署冒烟
 ```
 
-`npm run test:e2e` 会先由测试配置里的静态服务器提供 `.output/public`，再用 Playwright 访问。若 Playwright 浏览器无法下载，配置使用本机已安装的 Microsoft Edge（`channel: 'msedge'`）。
+`npm run test:e2e` 会先由测试配置里的静态服务器提供 `.output/public`，再用 Playwright 访问。本地 Windows 环境使用已安装的 Microsoft Edge（`channel: 'msedge'`）；CI 设置 `CI=true` 后使用已安装的 Chromium。
 
 ## 统计配置
 
@@ -77,7 +79,7 @@ npm run build
 
 `wrangler.toml` 已声明 `pages_build_output_dir = ".output/public"`；也可以在项目根目录执行 `npx wrangler pages deploy .output/public` 手动发布。真实预览域名由 Cloudflare Pages 项目生成，需要账号侧配置，仓库中不保存任何凭据。
 
-部署加固细节（`www` 301、Always Use HTTPS、HSTS/CSP、预览 HTTPS 与冒烟检查）见[部署与加固](docs/deployment.md)。仓库侧可先运行：
+部署加固细节（`www` 301、Always Use HTTPS、HSTS/CSP、预览 HTTPS 与冒烟检查）见[部署与加固](docs/deployment.md)。上线内容、账号侧阻塞项与验收状态见[上线验收清单](docs/launch-checklist.md)。仓库侧可先运行：
 
 ```bash
 npm run smoke:deployment   # 检查构建产物、200、HSTS/CSP 与 www 301（本地模拟）
@@ -88,7 +90,7 @@ npm run check:secrets      # 检查仓库不含凭据与 .env
 
 ## 当前状态
 
-站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、首篇中文文章、无 JavaScript 可读的正文与 Playwright 冒烟测试。部署加固的仓库侧配置（HSTS/CSP、`www` 跳转声明、冒烟与密钥扫描）已就绪；Cloudflare Pages 的真实预览部署、DNS 与 `www` 跳转仍待账号侧完成，详见[部署与加固](docs/deployment.md)。
+站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、文章/标签/专题/归档页、无 JavaScript 可读的正文与 Playwright 测试。仓库侧上线门禁（内容护栏、构建、JSON-LD/sitemap/RSS/robots/llms.txt、内链、Pagefind、HSTS/CSP、`www` 跳转声明、冒烟与密钥扫描）已通过；3 篇首发文章与 2 篇平台稿尚未写，Cloudflare Pages 项目、DNS、真实统计/Giscus ID 与 `www` 跳转仍待账号侧完成，详见[上线验收清单](docs/launch-checklist.md)。
 
 ## 关键约束
 

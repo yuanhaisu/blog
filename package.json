@@ -10,11 +10,14 @@
     "search:index": "pagefind --site .output/public --glob \"posts/**/*.html\"",
     "preview": "nuxt preview",
     "validate:content": "node scripts/validate-content.mjs",
+    "validate:artifacts": "node scripts/validate-artifacts.mjs",
+    "check:links": "node scripts/check-internal-links.mjs",
     "fonts:subset": "node scripts/subset-fonts.mjs",
     "test": "playwright test",
     "test:e2e": "playwright test",
     "smoke:deployment": "node scripts/deployment-smoke.mjs",
-    "check:secrets": "node scripts/check-no-secrets.mjs"
+    "check:secrets": "node scripts/check-no-secrets.mjs",
+    "ci": "npm run validate:content && npm run check:secrets && npm run build && npm run validate:artifacts && npm run check:links && npm run test:e2e && npm run smoke:deployment"
   },
   "dependencies": {
     "@nuxt/content": "~3.16.2",

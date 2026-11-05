@@ -6,7 +6,7 @@ updated: 2026-11-08
 tags:
   - 一人交付
   - AI Agent
-series: 一人交付实验
+series: one-person-delivery-experiment
 order: 1
 draft: false
 featured: false
