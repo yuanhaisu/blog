@@ -6,7 +6,12 @@ const year = new Date().getFullYear()
   <div class="page-shell">
     <header class="site-header">
       <NuxtLink to="/" class="site-brand">一人交付笔记</NuxtLink>
-      <p class="site-byline">袁海粟（Yuan Haisu）的个人博客</p>
+      <div class="site-header-meta">
+        <p class="site-byline">袁海粟（Yuan Haisu）的个人博客</p>
+        <nav class="site-nav" aria-label="主导航">
+          <NuxtLink to="/about">关于</NuxtLink>
+        </nav>
+      </div>
     </header>
 
     <main class="site-main">
@@ -19,6 +24,7 @@ const year = new Date().getFullYear()
       <p><NuxtLink to="/privacy">隐私说明</NuxtLink></p>
     </footer>
 
+    <SitePersonJsonLd />
     <SiteAnalytics />
   </div>
 </template>
