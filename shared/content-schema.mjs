@@ -53,3 +53,16 @@ export const REQUIRED_POST_FIELDS = [
   'lang',
   'license',
 ]
+
+/**
+ * Optional metadata document for a series.
+ *
+ * The series slug comes from the file path (`content/series/<slug>.md`) and is
+ * referenced by `PostFrontmatter.series`.
+ */
+export const seriesFrontmatterSchema = z
+  .object({
+    title: z.string().min(1),
+    description: z.string().min(1).optional(),
+  })
+  .strict()

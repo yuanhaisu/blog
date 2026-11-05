@@ -4,6 +4,9 @@ description: 用于验证标记为草稿的文章不会进入生产构建、首�
 date: 2026-11-05
 tags:
   - 内容护栏
+  - 测试标签
+series: test-series
+order: 99
 draft: true
 featured: false
 lang: zh
