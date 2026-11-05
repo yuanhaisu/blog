@@ -16,6 +16,9 @@ const year = new Date().getFullYear()
     <footer class="site-footer">
       <p>© {{ year }} 袁海粟（Yuan Haisu）</p>
       <p>一人交付实验 · 中文 canonical</p>
+      <p><NuxtLink to="/privacy">隐私说明</NuxtLink></p>
     </footer>
+
+    <SiteAnalytics />
   </div>
 </template>
