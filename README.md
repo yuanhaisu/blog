@@ -50,7 +50,23 @@ NUXT_PUBLIC_BAIDU_ANALYTICS_ID=<baidu-hm-site-id>
 npm run build
 ```
 
-在 Cloudflare Pages 项目的环境变量中设置同名的 `NUXT_PUBLIC_*` 变量即可。`.env.example` 列出了这两个变量。
+在 Cloudflare Pages 项目的环境变量中设置同名的 `NUXT_PUBLIC_*` 变量即可。`.env.example` 列出了这些变量。
+
+## 评论配置（Giscus）
+
+文章页的评论基于 Giscus 与 GitHub Discussions，评论内容不进入本站仓库，也没有评论数据库或用户系统。评论只在评论区进入视口或读者点击「加载评论」后才加载，主题跟随 `prefers-color-scheme`；国内读者会看到知乎/公众号讨论入口。禁用 JavaScript 时页面显示 `<noscript>` 说明与 GitHub Discussions 链接。
+
+Giscus 配置不是密钥，但仓库里只有占位值。先在 `yuanhaisu/blog` 仓库启用 Discussions，创建 **Announcements** 类型的分类，再在 <https://giscus.app/zh-CN> 生成配置：
+
+```bash
+NUXT_PUBLIC_GISCUS_REPO=yuanhaisu/blog
+NUXT_PUBLIC_GISCUS_REPO_ID=<giscus 生成器给出的 data-repo-id>
+NUXT_PUBLIC_GISCUS_CATEGORY=Announcements
+NUXT_PUBLIC_GISCUS_CATEGORY_ID=<giscus 生成器给出的 data-category-id>
+npm run build
+```
+
+未设置这些变量时构建仍会成功，并保留 `app/utils/giscus.ts` 中的占位配置；上线前必须在 Cloudflare Pages 的环境变量中填入真实值，否则 Giscus 无法创建讨论。`public/_headers` 的 CSP 已允许 `https://giscus.app` 的脚本与 iframe。
 
 ## 部署（Cloudflare Pages）
 
