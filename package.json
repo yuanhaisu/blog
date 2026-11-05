@@ -8,6 +8,7 @@
     "build": "nuxt generate",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
+    "validate:content": "node scripts/validate-content.mjs",
     "test": "playwright test",
     "test:e2e": "playwright test",
     "smoke:deployment": "node scripts/deployment-smoke.mjs",
@@ -16,6 +17,7 @@
   "dependencies": {
     "@nuxt/content": "~3.16.2",
     "better-sqlite3": "^13.0.3",
+    "js-yaml": "^4.3.2",
     "nuxt": "~4.6.4"
   },
   "devDependencies": {

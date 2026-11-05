@@ -2,7 +2,7 @@
 const route = useRoute()
 
 const { data: post } = await useAsyncData(`post:${route.path}`, () =>
-  queryCollection('posts').path(route.path).first(),
+  queryPublishedPosts().path(route.path).first(),
 )
 
 if (!post.value) {

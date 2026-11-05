@@ -1,6 +1,6 @@
 <script setup lang="ts">
 const { data: posts } = await useAsyncData('home-posts', () =>
-  queryCollection('posts').order('date', 'DESC').all(),
+  queryPublishedPosts().order('date', 'DESC').all(),
 )
 
 useHead({
