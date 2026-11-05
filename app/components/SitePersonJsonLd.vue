@@ -1,16 +1,8 @@
 <script setup lang="ts">
-const person = buildPersonJsonLd()
+const profileSameAs = useConfirmedProfileSameAs()
+const person = buildPersonJsonLd(profileSameAs.value)
 
-useHead({
-  script: [
-    {
-      key: 'person-jsonld',
-      type: 'application/ld+json',
-      innerHTML: serializeJsonLd(person),
-      tagPriority: 'high',
-    },
-  ],
-})
+useJsonLd([{ key: 'person-jsonld', data: person }])
 </script>
 
 <template>

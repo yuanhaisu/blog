@@ -1,9 +1,15 @@
+import {
+  LICENSE_URL,
+  PERSON_ID,
+  WEBSITE_ID,
+} from '#shared/site-config.mjs'
+
 /**
  * URL and schema.org helpers shared by page metadata.
  *
  * Everything that leaves the site must be an absolute URL on the canonical
- * origin (`https://yuanhaisu.com`); relative paths in head tags or JSON-LD are
- * ambiguous for crawlers and AI agents.
+ * origin; relative paths in head tags or JSON-LD are ambiguous for crawlers
+ * and AI agents.
  */
 export function absoluteUrl(path: string): string {
   return new URL(path, `${SITE.url}/`).href
@@ -27,13 +33,11 @@ export function licenseUrl(license: string): string {
   }
 
   if (/^cc[- ]by[- ]4\.0$/i.test(license.trim())) {
-    return 'https://creativecommons.org/licenses/by/4.0/'
+    return LICENSE_URL
   }
 
   return license
 }
-
-export const WEBSITE_ID = `${SITE.url}/#website`
 
 /**
  * Site-wide WebSite node rendered once by the default layout.

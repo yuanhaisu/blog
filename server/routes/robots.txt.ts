@@ -1,5 +1,5 @@
 import { setHeader } from 'h3'
-import { SITE_URL } from '../utils/discovery'
+import { SITE_ORIGIN } from '#shared/site-config.mjs'
 
 /**
  * Explicitly allow mainstream search and AI crawlers, per ADR-0006. No
@@ -27,7 +27,7 @@ export default defineEventHandler((event) => {
 
   setHeader(event, 'content-type', 'text/plain; charset=utf-8')
 
-  return `# ${SITE_URL}/robots.txt
+  return `# ${SITE_ORIGIN}/robots.txt
 # 全站开放抓取：主流搜索引擎与 AI 爬虫均被明确允许。
 
 User-agent: *
@@ -35,6 +35,6 @@ Allow: /
 
 ${groups}
 
-Sitemap: ${SITE_URL}/sitemap.xml
+Sitemap: ${SITE_ORIGIN}/sitemap.xml
 `
 })

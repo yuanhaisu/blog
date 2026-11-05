@@ -5,11 +5,11 @@
   "type": "module",
   "scripts": {
     "dev": "nuxt dev",
-    "build": "nuxt generate && npm run search:index",
+    "build": "node scripts/stage-content-fixtures.mjs && nuxt generate && npm run search:index",
     "generate": "npm run build",
     "search:index": "pagefind --site .output/public --glob \"posts/**/*.html\"",
     "preview": "nuxt preview",
-    "validate:content": "node scripts/validate-content.mjs",
+    "validate:content": "node scripts/stage-content-fixtures.mjs && node scripts/validate-content.mjs",
     "validate:artifacts": "node scripts/validate-artifacts.mjs",
     "check:links": "node scripts/check-internal-links.mjs",
     "fonts:subset": "node scripts/subset-fonts.mjs",

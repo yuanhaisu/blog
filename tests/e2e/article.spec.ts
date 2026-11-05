@@ -62,6 +62,7 @@ test('目录列出 h2/h3 标题并链接到对应锚点', async ({ page }) => {
     { level: 3, text: '环境要求' },
     { level: 3, text: '目录结构' },
     { level: 2, text: '示例代码' },
+    { level: 2, text: '配图' },
     { level: 2, text: '小结' },
   ]
 
@@ -103,6 +104,15 @@ test('代码块有语法高亮且文本可复制', async ({ page, context }) => 
 
   const clipboard = await page.evaluate(() => navigator.clipboard.readText())
   expect(clipboard).toContain('findFixture')
+})
+
+test('文章内图片默认懒加载并异步解码', async ({ page }) => {
+  await page.goto(fixturePath)
+
+  const image = page.locator('.post-body img').first()
+  await expect(image).toHaveAttribute('src', '/avatar.png')
+  await expect(image).toHaveAttribute('loading', 'lazy')
+  await expect(image).toHaveAttribute('decoding', 'async')
 })
 
 test('上一篇/下一篇按文章日期顺序链接', async ({ page }) => {

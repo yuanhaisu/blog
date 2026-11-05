@@ -15,14 +15,14 @@
  * Usage: node scripts/check-internal-links.mjs [--root .output/public] [--content content]
  */
 import { once } from 'node:events'
-import { access, readFile, readdir } from 'node:fs/promises'
+import { access, readFile } from 'node:fs/promises'
 import { request as httpRequest } from 'node:http'
-import { join, relative, resolve, sep } from 'node:path'
+import { join, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { createStaticServer } from '../tests/static-server.mjs'
-import { parseFrontmatter } from '../shared/frontmatter.mjs'
+import { collectDraftRoutes } from '../shared/content-files.mjs'
+import { SITE_ORIGIN } from '../shared/site-config.mjs'
 
-const SITE_ORIGIN = 'https://yuanhaisu.com'
 const failures = []
 const checks = []
 
@@ -97,38 +97,6 @@ async function pathExists(path) {
   } catch {
     return false
   }
-}
-
-async function walk(directory) {
-  const files = []
-  const entries = await readdir(directory, { withFileTypes: true })
-
-  for (const entry of entries) {
-    const path = join(directory, entry.name)
-    if (entry.isDirectory()) files.push(...(await walk(path)))
-    else if (entry.isFile()) files.push(path)
-  }
-
-  return files
-}
-
-async function collectDraftRoutes(contentDir) {
-  const postsDir = join(contentDir, 'posts')
-  if (!(await pathExists(postsDir))) return []
-
-  const routes = []
-  for (const file of await walk(postsDir)) {
-    if (!file.toLowerCase().endsWith('.md')) continue
-    const parsed = parseFrontmatter(await readFile(file, 'utf8'))
-    if (parsed.error || parsed.data?.draft !== true) continue
-    routes.push(
-      `/posts/${relative(postsDir, file)
-        .replace(/\.md$/i, '')
-        .split(sep)
-        .join('/')}`,
-    )
-  }
-  return routes
 }
 
 async function readSitemapPaths(rootDir) {
@@ -281,7 +249,7 @@ export async function checkInternalLinks({
       unknownPath,
     )
 
-    const draftRoutes = await collectDraftRoutes(contentDir)
+    const draftRoutes = await collectDraftRoutes({ contentDir })
     const reachableDrafts = []
     for (const route of draftRoutes) {
       const response = await doRequest(route)

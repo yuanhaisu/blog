@@ -16,8 +16,9 @@ const discussionsUrl = computed(
   () => `https://github.com/${config.value.repo}/discussions`,
 )
 
-const domesticProfiles = PERSON_PROFILES.filter(
-  (profile) => profile.label !== 'GitHub',
+const profiles = useProfiles()
+const domesticProfiles = computed(() =>
+  profiles.value.filter((profile) => profile.domestic),
 )
 
 const section = ref<HTMLElement | null>(null)
@@ -28,6 +29,27 @@ const theme = ref<GiscusTheme>('light')
 
 let giscusScript: HTMLScriptElement | null = null
 let themeQuery: MediaQueryList | null = null
+let themeObserver: MutationObserver | null = null
+
+function documentTheme(): GiscusTheme {
+  const attribute = document.documentElement.dataset.theme
+  if (attribute === 'dark' || attribute === 'light') {
+    return attribute
+  }
+
+  try {
+    const stored = window.localStorage.getItem('theme')
+    if (stored === 'dark' || stored === 'light') {
+      return stored
+    }
+  } catch {
+    // Storage may be blocked; fall back to the system preference.
+  }
+
+  return window.matchMedia('(prefers-color-scheme: dark)').matches
+    ? 'dark'
+    : 'light'
+}
 
 function notifyGiscusTheme(next: GiscusTheme) {
   const iframe = section.value?.querySelector<HTMLIFrameElement>(
@@ -84,13 +106,21 @@ function loadComments() {
 onMounted(() => {
   hydrated.value = true
 
+  // 站点主题以 <html data-theme> 为准（由主题初始化脚本和 ThemeToggle
+  // 维护）；localStorage 与系统偏好只是它缺失时的兜底。
+  theme.value = documentTheme()
   themeQuery = window.matchMedia('(prefers-color-scheme: dark)')
-  theme.value = themeQuery.matches ? 'dark' : 'light'
 
-  const onThemeChange = (event: MediaQueryListEvent) => {
-    applyTheme(event.matches ? 'dark' : 'light')
+  const onThemeChange = () => {
+    applyTheme(documentTheme())
   }
   themeQuery.addEventListener('change', onThemeChange)
+
+  themeObserver = new MutationObserver(onThemeChange)
+  themeObserver.observe(document.documentElement, {
+    attributes: true,
+    attributeFilter: ['data-theme'],
+  })
 
   let observer: IntersectionObserver | null = null
 
@@ -111,6 +141,7 @@ onMounted(() => {
 
   onBeforeUnmount(() => {
     observer?.disconnect()
+    themeObserver?.disconnect()
     themeQuery?.removeEventListener('change', onThemeChange)
   })
 })
@@ -144,16 +175,7 @@ onMounted(() => {
         不方便使用 GitHub？欢迎到知乎或微信公众号继续讨论同一个话题。
       </p>
       <ul class="post-comments-domestic-links">
-        <li v-for="profile in domesticProfiles" :key="profile.label">
-          <a
-            v-if="profile.href"
-            :href="profile.href"
-            rel="noopener noreferrer"
-          >
-            {{ profile.label }}
-          </a>
-          <span v-else>{{ profile.label }}（账号入口准备中）</span>
-        </li>
+        <SiteProfileLinks :profiles="domesticProfiles" />
       </ul>
       <p>
         <NuxtLink to="/about">在关于页查看作者的全部公开入口</NuxtLink>

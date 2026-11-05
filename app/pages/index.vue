@@ -1,8 +1,16 @@
 <script setup lang="ts">
 const route = useRoute()
 
-const { data: posts } = await useAsyncData('home-posts', () =>
-  queryPublishedPosts().order('date', 'DESC').all(),
+const [{ data: posts }, { data: featuredPosts }] = await Promise.all([
+  useAsyncData('home-posts', () =>
+    queryPublishedPosts().order('date', 'DESC').all(),
+  ),
+  useAsyncData('home-featured-posts', () => fetchFeaturedPosts()),
+])
+
+const profiles = useProfiles()
+const wechatProfile = computed(() =>
+  profiles.value.find((profile) => profile.kind === 'wechat'),
 )
 
 usePageSeo({
@@ -28,15 +36,38 @@ usePageSeo({
       </p>
     </section>
 
+    <section
+      v-if="featuredPosts?.length"
+      class="featured"
+      aria-labelledby="featured-heading"
+    >
+      <h2 id="featured-heading">精选文章</h2>
+      <ul class="post-list">
+        <PostListItem
+          v-for="post in featuredPosts"
+          :key="post.path"
+          :post="post"
+        />
+      </ul>
+    </section>
+
     <section class="latest" aria-labelledby="latest-heading">
       <h2 id="latest-heading">最新文章</h2>
       <ul class="post-list">
-        <li v-for="post in posts" :key="post.path" class="post-item">
-          <NuxtLink :to="post.path" class="post-link">
-            <span class="post-title">{{ post.title }}</span>
-            <time :datetime="post.date">{{ post.date }}</time>
-            <span class="post-description">{{ post.description }}</span>
-          </NuxtLink>
+        <PostListItem v-for="post in posts" :key="post.path" :post="post" />
+      </ul>
+    </section>
+
+    <section class="subscribe" aria-labelledby="subscribe-heading">
+      <h2 id="subscribe-heading">订阅</h2>
+      <p>通过 RSS 获取更新，或在微信公众号查看精选内容。</p>
+      <ul class="subscribe-list">
+        <li><NuxtLink to="/feed.xml">RSS 订阅</NuxtLink></li>
+        <li v-if="wechatProfile?.href">
+          <a :href="wechatProfile.href" rel="noopener">微信公众号</a>
+        </li>
+        <li v-else>
+          <span>微信公众号：{{ wechatProfile?.detail }}</span>
         </li>
       </ul>
     </section>

@@ -158,3 +158,23 @@ test('评论主题跟随系统明暗模式', async ({ page }) => {
   await expect(comments).toHaveAttribute('data-giscus-theme', 'light')
   await expect(script).toHaveAttribute('data-theme', 'light')
 })
+
+test('评论主题跟随站点 data-theme 切换', async ({ page }) => {
+  await page.route('https://giscus.app/**', (route) => route.abort())
+  await page.goto(articlePath)
+
+  const comments = page.locator('#comments')
+  await expect(comments).toHaveAttribute('data-giscus-theme', 'light')
+
+  await comments
+    .getByRole('button', { name: '加载评论' })
+    .dispatchEvent('click')
+  const script = page.locator('script[src="https://giscus.app/client.js"]')
+  await expect(script).toHaveAttribute('data-theme', 'light')
+
+  await page.getByRole('button', { name: '切换到深色模式' }).click()
+
+  await expect(page.locator('html')).toHaveAttribute('data-theme', 'dark')
+  await expect(comments).toHaveAttribute('data-giscus-theme', 'dark')
+  await expect(script).toHaveAttribute('data-theme', 'dark')
+})

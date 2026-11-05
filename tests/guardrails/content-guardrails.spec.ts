@@ -91,6 +91,30 @@ test('草稿路由不算已发布路由，但草稿自身的死链不阻止构�
   expect(output).not.toContain('/posts/future-post')
 })
 
+test('launch 文章满足站内链接与配图要求时通过，并可使用动态标签/专题路由', async () => {
+  const { code, output } = await runGuardrails('launch-valid')
+
+  expect(code).toBe(0)
+  expect(output).toContain('1 篇已发布')
+  expect(output).not.toContain('没有对应的站内路由')
+})
+
+test('launch 文章缺少站内链接或原创配图时失败并说明要求', async () => {
+  const { code, output } = await runGuardrails('launch-invalid')
+
+  expect(code).toBe(1)
+  expect(output).toContain('launch-invalid.md')
+  expect(output).toContain('launch 文章至少需要 3 个不同的站内链接')
+  expect(output).toContain('launch 文章至少需要 1 张站内原创配图')
+})
+
+test('未标记 launch 的普通文章不受上线链接与配图要求约束', async () => {
+  const { code, output } = await runGuardrails('valid')
+
+  expect(code).toBe(0)
+  expect(output).not.toContain('launch 文章至少需要')
+})
+
 test('手机号被拦截且错误信息不回显敏感值', async () => {
   const { code, output } = await runGuardrails('sensitive-phone')
 

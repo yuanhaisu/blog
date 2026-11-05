@@ -1,12 +1,10 @@
 import { setHeader } from 'h3'
+import { SITE_ORIGIN, LICENSE_URL } from '#shared/site-config.mjs'
 import { PERSON, SITE } from '../../app/utils/site'
 import {
   absoluteUrl,
   fetchDiscoveryPosts,
-  SITE_URL,
 } from '../utils/discovery'
-
-const LICENSE_URL = 'https://creativecommons.org/licenses/by/4.0/'
 
 function inlineText(value: string): string {
   return value.replace(/([\\[\]()])/g, '\\$1').replace(/\s*\r?\n\s*/g, ' ')
@@ -44,16 +42,16 @@ ${SITE.name}是袁海粟（Yuan Haisu）的个人博客，中文 canonical，记
 - 简介：${PERSON.description}
 - GitHub：https://github.com/yuanhaisu
 - 邮箱：${PERSON.email}
-- RSS：${SITE_URL}/feed.xml
+- RSS：${SITE_ORIGIN}/feed.xml
 
 ## 核心页面
 
-- [首页](${SITE_URL}/)
-- [关于（身份锚点）](${SITE_URL}/about)
-- [归档](${SITE_URL}/archive)
-- [隐私说明](${SITE_URL}/privacy)
-- [RSS 订阅](${SITE_URL}/feed.xml)
-- [Sitemap](${SITE_URL}/sitemap.xml)
+- [首页](${SITE_ORIGIN}/)
+- [关于（身份锚点）](${SITE_ORIGIN}/about)
+- [归档](${SITE_ORIGIN}/archive)
+- [隐私说明](${SITE_ORIGIN}/privacy)
+- [RSS 订阅](${SITE_ORIGIN}/feed.xml)
+- [Sitemap](${SITE_ORIGIN}/sitemap.xml)
 
 ## 文章索引
 

@@ -1,4 +1,6 @@
 <script setup lang="ts">
+import { LICENSE_URL } from '#shared/site-config.mjs'
+
 const route = useRoute()
 const year = new Date().getFullYear()
 
@@ -51,6 +53,11 @@ function isCurrent(path: string) {
     <footer class="site-footer">
       <p>© {{ year }} 袁海粟（Yuan Haisu）</p>
       <p>一人交付实验 · 中文 canonical</p>
+      <p>
+        除非另有说明，本站内容采用
+        <a :href="LICENSE_URL" rel="license">CC BY 4.0</a>
+        授权
+      </p>
       <p><NuxtLink to="/privacy">隐私说明</NuxtLink></p>
     </footer>
 

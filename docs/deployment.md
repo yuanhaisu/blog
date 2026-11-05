@@ -114,8 +114,9 @@ SMOKE_BASE_URL=https://yuanhaisu.com npm run smoke:deployment
 
 - Nuxt 静态产物包含内联 import map 与 `window.__NUXT__` 引导脚本，因此 `script-src` 需要 `'unsafe-inline'`；如果未来 Nuxt 提供 nonce/hash 方案，可再收紧。
 - Pagefind 需要 `script-src 'wasm-unsafe-eval'` 与 `worker-src 'self' blob:`。
-- Giscus 允许 `https://giscus.app`（脚本与 iframe）；统计允许 Cloudflare Web Analytics 与百度统计域名；字体允许自托管与 Google Fonts 来源。
-- 新增第三方服务时，同时更新 `public/_headers`、`tests/e2e/deployment.spec.ts` 与 `scripts/deployment-smoke.mjs` 的允许来源断言，避免“配置存在但实际被 CSP 拦截”。
+- Giscus 允许 `https://giscus.app`（脚本与 iframe）；统计允许 Cloudflare Web Analytics 与百度统计域名；字体完全自托管（`font-src 'self'`），不再需要 Google Fonts 来源。
+- 百度统计只在访客明确同意后加载；`https://hm.baidu.com` 保留在 `script-src`/`connect-src` 白名单中，但未同意前不会发起请求。
+- 新增第三方服务时，同时更新 `public/_headers`、`tests/e2e/deployment.spec.ts`、`scripts/deployment-smoke.mjs` 与 `scripts/validate-artifacts.mjs`（产物分组校验会检查 CSP 来源）的允许来源断言，避免“配置存在但实际被 CSP 拦截”。
 
 ## 密钥与日志
 

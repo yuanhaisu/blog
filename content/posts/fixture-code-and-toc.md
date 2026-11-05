@@ -55,6 +55,12 @@ npm run build
 npx playwright test
 ```
 
+## 配图
+
+下面这张站内图片用于验证 Markdown 图片默认启用懒加载与异步解码。
+
+![站点头像](/avatar.png)
+
 ## 小结
 
 这篇夹具同时链接回[第一篇正式文章](/posts/why-i-started-one-person-delivery-notes)，用于验证相关文章与内链检查。

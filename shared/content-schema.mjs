@@ -38,6 +38,10 @@ export const postFrontmatterSchema = z
     order: z.number().finite().optional(),
     draft: z.boolean(),
     featured: z.boolean().default(false),
+    // Marks an article that is part of the public launch set. Such articles
+    // must link to at least three internal routes and include an original
+    // site-local diagram/image; test fixtures leave it false.
+    launch: z.boolean().default(false),
     lang: z.enum(['zh', 'en']),
     translationOf: z.string().min(1).optional(),
     license: z.string().min(1),
