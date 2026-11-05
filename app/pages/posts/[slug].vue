@@ -220,5 +220,7 @@ useJsonLd([
         </ul>
       </nav>
     </footer>
+
+    <PostComments />
   </article>
 </template>
