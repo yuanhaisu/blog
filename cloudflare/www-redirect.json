@@ -1,0 +1,22 @@
+{
+  "description": "Cloudflare account-side deployment config for yuanhaisu.com. Cloudflare Pages _redirects cannot match hosts, so the www-to-apex redirect is created as a Bulk Redirects list entry (or an equivalent Redirect Rule) in the Cloudflare account. See docs/deployment.md. No credentials or account IDs belong in this file.",
+  "zone": "yuanhaisu.com",
+  "pages_project": "yuanhaisu-blog",
+  "canonical_origin": "https://yuanhaisu.com",
+  "always_use_https": true,
+  "www_redirect": {
+    "source_url": "www.yuanhaisu.com",
+    "target_url": "https://yuanhaisu.com",
+    "status_code": 301,
+    "preserve_query_string": true,
+    "subpath_matching": true,
+    "preserve_path_suffix": true,
+    "include_subdomains": true
+  },
+  "dns": {
+    "type": "A",
+    "name": "www",
+    "content": "192.0.2.1",
+    "proxied": true
+  }
+}
