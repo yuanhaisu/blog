@@ -16,6 +16,7 @@ GitHub 内容源 → Cloudflare Pages → `yuanhaisu.com`；中文 canonical；�
 - [实施总案](docs/plan.md)
 - [上线验收清单](docs/launch-checklist.md)
 - [首发内容提纲](docs/content-outlines.md)
+- 平台稿：[知乎草稿](docs/platform-posts/zhihu.md) · [公众号草稿](docs/platform-posts/wechat.md)
 - [术语表](GLOSSARY.md)
 - Agent 配置：[issue tracker](docs/agents/issue-tracker.md) · [triage labels](docs/agents/triage-labels.md) · [domain docs](docs/agents/domain.md)
 - ADR

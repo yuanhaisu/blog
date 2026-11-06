@@ -59,9 +59,9 @@ CI 工作流 `.github/workflows/ci.yml` 在 Pull Request、推送到 `main` / `f
 - 首页有一等精选文章区（`featured: true`，无文章时整段隐藏）与订阅入口（RSS + 公众号占位）。
 - `scripts/validate-artifacts.mjs` 已拆分为 `scripts/lib/artifacts/` 下的按产物模块；CSP 不再包含 Google Fonts 来源，字体全部自托管。
 
-## 2. 上线内容：3 篇博客初稿已写，2 篇平台稿待写
+## 2. 上线内容：3 篇博客 + 2 篇平台稿初稿已写，待审阅/发布
 
-以下 5 篇是 v1 上线门槛（见 `docs/plan.md` §5.1–5.2）。3 篇博客已有初稿（待审阅/发布），2 篇平台稿尚未写，因此仍不满足正式上线条件。详细提纲、互链、配图与平台改编方案见 [`docs/content-outlines.md`](content-outlines.md)。
+以下 5 篇是 v1 上线门槛（见 `docs/plan.md` §5.1–5.2）。5 篇均已有初稿（待审阅/发布），因此仍不满足正式上线条件。详细提纲、互链、配图与平台改编方案见 [`docs/content-outlines.md`](content-outlines.md)；平台稿草稿见 `docs/platform-posts/`。
 
 ### 2.1 3 篇中文博客（PENDING）
 
@@ -75,8 +75,8 @@ CI 工作流 `.github/workflows/ci.yml` 在 Pull Request、推送到 `main` / `f
 
 | # | 平台 | 工作标题 | 状态 |
 | --- | --- | --- | --- |
-| 4 | 知乎 | 《一个人如何用 AI agent 交付一套多租户 SaaS？》 | 未写、未发布 |
-| 5 | 微信公众号 | 《一人公司的 AI 交付实验：第一期复盘》 | 未写、未发布 |
+| 4 | 知乎 | 《一个人如何用 AI agent 交付一套多租户 SaaS？》 | 已写草稿，待发布 |
+| 5 | 微信公众号 | 《一人公司的 AI 交付实验：第一期复盘》 | 已写草稿，待发布 |
 
 ### 2.3 测试夹具已移出生产内容
 
@@ -102,7 +102,7 @@ tests/fixtures/content/series/fixture-series.md
 
 1. 3 篇博客已写入 `content/posts/`，frontmatter 已通过 `shared/content-schema.mjs`，并已加 `launch: true`、至少 3 个站内链接与 1 张站内原创配图；下一步是审阅正文与配图。
 2. 如需专题页，在 `content/series/` 增加 ASCII slug 的专题文档（中文标题放 `title`）；中文文件名在 Nuxt Content 中可能无法正确生成路由。
-3. 平台文章发布后，拿到真实知乎/公众号 URL，再更新第 3 节的 `sameAs` 与 About 入口。
+3. 平台稿初稿在 `docs/platform-posts/zhihu.md` 与 `docs/platform-posts/wechat.md`；发布后，拿到真实知乎/公众号 URL，再更新第 3 节的 `sameAs` 与 About 入口。
 4. 重新执行 `npm run ci`；测试构建会把夹具与正式文章一起纳入 sitemap、RSS、llms.txt 与 Pagefind；生产构建 `npm run build` 只包含正式文章。
 5. 测试夹具已在 `tests/fixtures/content/`，生产构建不包含，不需要删除。第 1 篇已使用 `why-i-started-one-person-delivery-notes`，第 2/3 篇使用 `one-person-delivery-experiment-01-multi-agent-saas` 与 `one-person-delivery-experiment-02-ai-engineering-stack`；正文已满足 `launch: true` 护栏。
 
