@@ -130,7 +130,7 @@ npm run check:secrets      # 检查仓库不含凭据与 .env
 
 ## 当前状态
 
-站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、文章/标签/专题/归档页、无 JavaScript 可读的正文与 Playwright 测试。仓库侧上线门禁（内容护栏、测试构建、JSON-LD/sitemap/RSS/robots/llms.txt、内链、Pagefind、HSTS/CSP、`www` 跳转声明、冒烟与密钥扫描）已通过；生产内容已有 **3 篇正式文章初稿**，7 篇测试夹具只在测试/CI 时 staged；2 篇平台稿尚未写，Cloudflare Pages 项目、DNS、真实统计/Giscus ID 与 `www` 跳转仍待账号侧完成，详见[上线验收清单](docs/launch-checklist.md)。
+站点骨架已实现：Nuxt 4 + Nuxt Content 3 静态生成、首页、文章/标签/专题/归档页、无 JavaScript 可读的正文与 Playwright 测试。仓库侧上线门禁（内容护栏、测试构建、JSON-LD/sitemap/RSS/robots/llms.txt、内链、Pagefind、HSTS/CSP、`www` 跳转声明、冒烟与密钥扫描）已通过；生产内容已有 **3 篇正式文章初稿**，7 篇测试夹具只在测试/CI 时 staged；2 篇平台稿草稿已写。Cloudflare Pages 预览已上线：<https://yuanhaisu-blog.pages.dev>；apex `yuanhaisu.com` 自定义域仍是 `pending`，等待 Cloudflare zone + HiChina NS。真实统计/Giscus ID 与 `www` 跳转仍待账号侧完成，详见[上线验收清单](docs/launch-checklist.md)。
 
 ## 关键约束
 

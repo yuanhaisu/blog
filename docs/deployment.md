@@ -1,9 +1,23 @@
 # 部署与加固
 
-状态（2026-11-05）：
+状态（2026-11-07）：
 
 - **仓库侧已实现**：Cloudflare Pages 响应头（HSTS、CSP、安全头、缓存）、`www` → apex 的账号侧配置声明、部署冒烟脚本、仓库密钥扫描。
-- **账号侧待用户执行（当前 blocked）**：创建 Pages 项目、接入自定义域名、开启 Always Use HTTPS、创建 `www` Bulk Redirect、确认预览部署 HTTPS。仓库无法创建这些 Cloudflare 资源，也不保存任何凭据。
+- **已部署**：Cloudflare Pages 项目 `yuanhaisu-blog`，预览地址 <https://yuanhaisu-blog.pages.dev>；生产构建已通过 `wrangler pages deploy` 上传。
+- **已添加自定义域**：`yuanhaisu.com` 已加入 Pages 项目，状态 `pending`，提示 “CNAME record not set”。
+- **待用户执行**：在 Cloudflare 添加 `yuanhaisu.com` 站点并到 HiChina 修改 NS；zone 生效后激活 apex、创建 `www` Proxied DNS + Bulk Redirect、开启 Always Use HTTPS、设置环境变量。仓库不保存任何凭据。
+- **已知问题**：Cloudflare Pages 对目录式 `index.html` 默认把 `/posts/foo` 308 到 `/posts/foo/`；当前 canonical 是不带尾斜杠的 URL。v1 暂接受 308，后续统一尾斜杠或在 Pages/Cloudflare 侧调整。
+
+## 当前部署
+
+| 项 | 值 |
+| --- | --- |
+| Pages 项目 | `yuanhaisu-blog` |
+| 预览地址 | <https://yuanhaisu-blog.pages.dev> |
+| 最近部署 | `https://3bb8beee.yuanhaisu-blog.pages.dev`（干净 URL 重写未生效，308 仍存在） |
+| 自定义域 | `yuanhaisu.com`：`pending`（CNAME record not set） |
+| 部署命令 | `npx wrangler pages deploy .output/public --project-name=yuanhaisu-blog --branch=main --commit-dirty=true` |
+| 项目创建 | 使用 `npx wrangler pages project create yuanhaisu-blog --production-branch main --force`（wrangler 4.158 默认委托 Workers，`--force` 仅创建时需要） |
 
 ## 仓库内产物
 
@@ -36,15 +50,19 @@ npm run check:secrets        # 仓库密钥扫描
 
 ### 1. Pages 项目
 
-- 从 GitHub 仓库 `yuanhaisu/blog` 创建 Cloudflare Pages 项目。
-- 构建命令：`npm run generate`
+- 项目已创建：`yuanhaisu-blog`，当前通过 `wrangler pages deploy` 直接上传构建产物，尚未连接 GitHub 自动部署。
+- 构建命令：`npm run build`
 - 构建输出目录：`.output/public`
 - 环境变量：`NODE_VERSION=22`（不要添加任何密钥；本项目不需要构建期密钥）
 - 框架预设：None（纯静态站点）
+- 如需 Git 集成：在 Pages 项目 Settings → Builds & deployments 连接 `yuanhaisu/blog`，生产分支 `main`，构建命令与输出目录同上。
 
 ### 2. 自定义域名与 HTTPS
 
-- 只把 apex `yuanhaisu.com` 接入 Pages 自定义域名，按提示创建 DNS 记录。
+- apex `yuanhaisu.com` 已加入 Pages 自定义域，当前 `pending`；需要先把 `yuanhaisu.com` 添加到 Cloudflare 账号并改 NS，Pages 才能完成验证。
+- 在 Cloudflare Dashboard → Add a site → `yuanhaisu.com`（Free 计划）→ 查看 Cloudflare 分配的两条 NS。
+- 在阿里云/HiChina 域名控制台把 `dns1.hichina.com` / `dns2.hichina.com` 替换为这两条 NS；等待 zone 状态变为 Active。
+- zone 生效后，在 Pages 项目的 Custom domains 里激活 `yuanhaisu.com`，按提示创建 CNAME（Cloudflare 支持 apex CNAME flattening）。
 - `www.yuanhaisu.com` **不要**接入 Pages 自定义域名；它由第 3 步的代理 DNS + Bulk Redirect 处理。
 - Cloudflare 会自动签发并续期边缘证书；等待证书状态为 Active。
 - 进入 **SSL/TLS → Edge Certificates → Always Use HTTPS**，设为 **On**。这是“强制 HTTPS”的账号侧开关；仓库内只能通过 HSTS 告诉浏览器以后只用 HTTPS。

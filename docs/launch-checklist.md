@@ -106,20 +106,32 @@ tests/fixtures/content/series/fixture-series.md
 4. 重新执行 `npm run ci`；测试构建会把夹具与正式文章一起纳入 sitemap、RSS、llms.txt 与 Pagefind；生产构建 `npm run build` 只包含正式文章。
 5. 测试夹具已在 `tests/fixtures/content/`，生产构建不包含，不需要删除。第 1 篇已使用 `why-i-started-one-person-delivery-notes`，第 2/3 篇使用 `one-person-delivery-experiment-01-multi-agent-saas` 与 `one-person-delivery-experiment-02-ai-engineering-stack`；正文已满足 `launch: true` 护栏。
 
-## 3. 外部账号步骤：阻塞（blocked for user）
+## 3. 外部账号步骤：Pages 已部署，域名待 NS
 
-以下步骤均未执行，仓库不保存任何凭据。完成前不能宣称站点已上线。
+Pages 项目已创建并上传生产构建；apex 自定义域已加入项目但仍是 `pending`。以下剩余步骤需要用户账号操作，仓库不保存任何凭据。
 
 ### 3.1 Cloudflare Pages 与 DNS
 
-| 项目 | 仓库侧现状 | 阻塞项 |
+| 项目 | 当前状态 | 剩余项 |
 | --- | --- | --- |
-| Pages 项目 | 构建命令与输出目录已写入 `docs/deployment.md`：`npm run generate` → `.output/public`，`NODE_VERSION=22` | 需要用户登录 Cloudflare 创建项目并连接 GitHub 仓库 |
-| apex 自定义域名 | canonical、sitemap、RSS、llms.txt 均固定 `https://yuanhaisu.com` | 需要在 Cloudflare 添加站点/域名与 DNS 记录，等待证书 Active |
-| `www` → apex 301 | `cloudflare/www-redirect.json` 声明规则；本地模拟与测试通过 | 需要 Proxied DNS + Bulk Redirect（或 Redirect Rule）在账号侧实际创建并启用 |
-| HTTPS / HSTS | `_headers` 的 HSTS 与 CSP 已通过本地冒烟 | 需要 Always Use HTTPS、边缘证书签发；真实响应头需上线后复验 |
-| 预览部署 | 无仓库侧依赖 | 需要 Pages 首次构建生成 `*.pages.dev` 预览 URL |
-| 生产部署 | CI 只验证构建产物，不部署 | 需要用户在 Cloudflare 触发生产部署 |
+| Pages 项目 | 已创建 `yuanhaisu-blog`；生产构建已上传到 <https://yuanhaisu-blog.pages.dev> | 可选：连接 GitHub 自动部署 |
+| apex 自定义域名 | `yuanhaisu.com` 已加入 Pages 自定义域，状态 `pending`（CNAME record not set） | 在 Cloudflare 添加站点 + 在 HiChina 改 NS；zone Active 后激活域名 |
+| `www` → apex 301 | `cloudflare/www-redirect.json` 声明规则；本地模拟与测试通过；`www` 未加入 Pages 自定义域 | 需要 Proxied DNS + Bulk Redirect（或 Redirect Rule）在账号侧创建并启用 |
+| HTTPS / HSTS | 预览站已返回 HSTS/CSP；`_headers` 已生效 | 需要 Always Use HTTPS、边缘证书签发；生产域名上线后复验 |
+| 预览部署 | 已完成：<https://yuanhaisu-blog.pages.dev> | 无 |
+| 生产部署 | 预览已上线；apex 未激活 | 域名激活后复验生产部署 |
+
+### 3.1.1 当前待你执行：Cloudflare zone + NS
+
+1. 打开 <https://dash.cloudflare.com/> → Add a site → 输入 `yuanhaisu.com` → 选择 Free 计划。
+2. Cloudflare 扫描 DNS 后会给出两条 nameserver（形如 `xxx.ns.cloudflare.com`）。
+3. 到阿里云/HiChina 域名控制台 → `yuanhaisu.com` → 管理 → 修改 DNS 服务器 → 用这两条替换 `dns1.hichina.com` / `dns2.hichina.com`。
+4. 等 Cloudflare 显示 zone **Active**（通常几分钟到 24 小时）。
+5. 回复「zone active」；我继续激活 apex、创建 `www` 代理 DNS + 301、开启 Always Use HTTPS、配置环境变量并跑生产冒烟。
+
+当前 `yuanhaisu.com` 没有 A/MX/TXT 记录，改 NS 不会影响现有邮箱或网站；如果后续启用阿里云企业邮箱，在 Cloudflare DNS 添加 MX/SPF/DKIM 即可。
+
+已知问题：Cloudflare Pages 对目录式 `index.html` 默认把 `/posts/foo` 308 到 `/posts/foo/`，而 canonical 不带尾斜杠；v1 暂接受，后续统一尾斜杠或调整 Pages 设置。
 
 ### 3.2 真实统计 ID
 
@@ -158,10 +170,11 @@ NUXT_PUBLIC_GISCUS_CATEGORY_ID
 | --- | --- | --- |
 | 知乎主页 | `shared/site-config.mjs` 的 `resolveProfiles()` 默认返回空 `href`，About 显示占位文案；`sameAs` 不包含知乎 | 账号未建立/URL 未确认，不能编造；建立后通过 `NUXT_PUBLIC_ZHIHU_URL` 提供 |
 | 微信公众号入口 | 同上，默认占位；`sameAs` 不包含公众号 | 公众号未建立；建立后通过 `NUXT_PUBLIC_WECHAT_MP_URL` 提供 |
-| 平台文章 URL | 第 2 节两篇平台稿未写 | 发布后把真实 URL 写入环境变量，重新构建并确认 About 与 JSON-LD `sameAs` 同步 |
+| 平台文章 URL | 两篇平台稿草稿已写，待发布 | 发布后把真实 URL 写入环境变量，重新构建并确认 About 与 JSON-LD `sameAs` 同步 |
 
 ### 3.5 上线后外部复验
 
+- 预览冒烟：`curl -I https://yuanhaisu-blog.pages.dev/`（已通过 200、HSTS/CSP；文章 URL 目前 308 到尾斜杠后 200）。
 - 生产冒烟：`SMOKE_BASE_URL=https://yuanhaisu.com npm run smoke:deployment`（检查 HTTPS、200、HSTS/CSP、`www` 301、http→https）。
 - Google Search Console、Bing Webmaster、百度站长：提交 `https://yuanhaisu.com/sitemap.xml`，验证站点所有权。
 - 如启用域名邮箱：在 Cloudflare DNS 添加 MX/SPF/DKIM 记录。
@@ -173,7 +186,7 @@ NUXT_PUBLIC_GISCUS_CATEGORY_ID
 只有以下三项同时满足，才能把 v1 标记为已上线：
 
 - [x] 仓库侧 `npm run ci` 通过（当前已通过）。
-- [ ] 3 篇中文博客 + 2 篇平台文章完成并发布（当前未写）。
-- [ ] 第 3 节 Cloudflare/DNS/www/HTTPS/统计/Giscus/平台 URL 全部完成并复验（当前 blocked）。
+- [ ] 3 篇中文博客 + 2 篇平台文章完成并发布（3 篇博客与 2 篇平台稿已有初稿，尚未发布）。
+- [ ] 第 3 节 Cloudflare/DNS/www/HTTPS/统计/Giscus/平台 URL 全部完成并复验（Pages 预览已上线；apex 待 NS，其余待完成）。
 
 在此之前，可以继续使用预览部署、测试夹具与本地门禁，但不应对外宣布上线。
